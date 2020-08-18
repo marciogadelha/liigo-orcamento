@@ -22,8 +22,8 @@ api.get('/categories', async (req, res) => {
         }
     }
     const response = await connection.get('categories', config)
-    console.log(response)
-    return response
+    console.log(response.data)
+    return res.json(response.data)
 });
 
 api.get('/products', async (req, res) => {
@@ -38,8 +38,8 @@ api.get('/products', async (req, res) => {
         }
     }
     const response = await connection.get('products', config)
-    console.log(response)
-    return response
+    console.log(response.data)
+    return res.json(response.data)
 });
 
 module.exports = api;
