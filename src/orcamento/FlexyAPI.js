@@ -8,6 +8,19 @@ const FlexyAPI = class FlexyAPI {
     })
   }
 
+  async getUntilSuccess(info, config) {
+    let response = null
+    while(!response) {
+      try {
+        response = await this.api.get(info, config)
+        console.log(response)
+      } catch(error) {
+        console.log(error.message)
+      }
+    }
+    return response
+  }
+
   async getData(info, limit) {
     const config = {
       params: {
@@ -16,23 +29,19 @@ const FlexyAPI = class FlexyAPI {
         offset: 0
       }
     }
-    try {
-      let responseData = []
-      console.log("nextResponse: ")
-      let nextResponse = await this.api.get(info, config)
-      console.log("Teste")
-      console.log(nextResponse)
+    let responseData = []
+    console.log("nextResponse: ")
+    let nextResponse = await this.getUntilSuccess(info, config)
+    console.log("Teste")
+    console.log(nextResponse)
+    responseData = responseData.concat(nextResponse.data)
+    while(nextResponse.data.length === config.params.limit) {
+      console.log(config.params.offset)
+      config.params.offset += config.params.limit
+      nextResponse = await this.getUntilSuccess(info, config)
       responseData = responseData.concat(nextResponse.data)
-      while(nextResponse.data.length === config.params.limit) {
-        console.log(config.params.offset)
-        config.params.offset += config.params.limit
-        nextResponse = await this.api.get(info, config)
-        responseData = responseData.concat(nextResponse.data)
-      }
-      return responseData
-    } catch(err) {
-      console.log("Failed to get '" + info + "'!")
     }
+    return responseData
   }
 
   async getCategories() {
