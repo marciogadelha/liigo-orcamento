@@ -78,61 +78,68 @@ const Categories = class Categories {
   }
 
   async main() {
+    while(true) {
+      
+      const categories = await this.apiFlexy.getCategories()
+      console.log(categories)
+      this.root.insertArrayNodes(categories)
+      console.log(this.root)
+      const total = this.root.printTree('')
+      console.log(total)
 
-    const categories = await this.apiFlexy.getCategories()
-    console.log(categories)
-    this.root.insertArrayNodes(categories)
-    console.log(this.root)
-    const total = this.root.printTree('')
-    console.log(total)
+      let firstLevel = dom.window.document.createElement('div')
+      firstLevel.setAttribute('id', 'first-level')
+      firstLevel.setAttribute('class', 'col-3 pl-0 pr-0 h-100 mh-100 overflow-auto list-group tab-pane fade show active')
+      firstLevel.setAttribute('role', 'tablist')
+      const categoriesNode = this.root.findNodeByName("Categorias")
+      for (let category of categoriesNode.nodes) {
+        let a = dom.window.document.createElement('a')
+        a.setAttribute('class', 'list-group-item list-group-item-action')
+        a.setAttribute('id', 'root-' + category.referenceCode)
+        a.setAttribute('data-toggle', 'list')
+        a.setAttribute('href', '#' + category.referenceCode)
+        a.setAttribute('role', 'tab')
+        a.setAttribute('aria-controls', category.referenceCode)
+        a.textContent = category.name
+        firstLevel.appendChild(a)
+      }
 
-    let firstLevel = dom.window.document.createElement('div')
-    firstLevel.setAttribute('id', 'first-level')
-    firstLevel.setAttribute('class', 'col-3 pl-0 pr-0 h-100 mh-100 overflow-auto list-group tab-pane fade show active')
-    firstLevel.setAttribute('role', 'tablist')
-    const categoriesNode = this.root.findNodeByName("Categorias")
-    for (let category of categoriesNode.nodes) {
-      let a = dom.window.document.createElement('a')
-      a.setAttribute('class', 'list-group-item list-group-item-action')
-      a.setAttribute('id', 'root-' + category.referenceCode)
-      a.setAttribute('data-toggle', 'list')
-      a.setAttribute('href', '#' + category.referenceCode)
-      a.setAttribute('role', 'tab')
-      a.setAttribute('aria-controls', category.referenceCode)
-      a.textContent = category.name
-      firstLevel.appendChild(a)
-    }
-    this.divCategory.appendChild(firstLevel)
+      this.divCategory = dom.window.document.createElement('div')
+      this.divCategory.setAttribute('id', 'categories')
+      this.divCategory.setAttribute('class', 'row ml-3 mr-3 h-100 mh-100 overflow-auto')
+      
+      this.divCategory.appendChild(firstLevel)
 
-    this.loadSubCategories(categoriesNode.nodes)
+      this.loadSubCategories(categoriesNode.nodes)
 
-    const products = await this.apiFlexy.getProducts()
-    console.log(products)
+      const products = await this.apiFlexy.getProducts()
+      console.log(products)
 
-    let stores = []
-    for (let p of products) {
-      for (let c of p.categories) {
-        let node = this.root.findNode(c)
-        if (node) {
-          node.addStore(p.shoppingStore)
+      let stores = []
+      for (let p of products) {
+        for (let c of p.categories) {
+          let node = this.root.findNode(c)
+          if (node) {
+            node.addStore(p.shoppingStore)
+          }
+        }
+        let store = null
+        for (let s of stores) {
+          if (s.name == p.shoppingStore) {
+            store = s
+            break
+          }
+        }
+        if (store) {
+          store.addCategory(p.categories)
+        } else {
+          stores.push(new Store(p.shoppingStore, p.categories))
         }
       }
-      let store = null
-      for (let s of stores) {
-        if (s.name == p.shoppingStore) {
-          store = s
-          break
-        }
-      }
-      if (store) {
-        store.addCategory(p.categories)
-      } else {
-        stores.push(new Store(p.shoppingStore, p.categories))
-      }
-    }
-    console.log(stores)
-    this.root.printTree('')
+      console.log(stores)
+      this.root.printTree('')
 
+    }
   }
 }
 
