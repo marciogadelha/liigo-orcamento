@@ -1,5 +1,5 @@
 
-export default class CategoryTree {
+const CategoryTree = class CategoryTree {
 
     constructor(name, referenceCode, sortOrder) {
         this.name = name
@@ -111,3 +111,5 @@ export default class CategoryTree {
       }
     }
 }
+
+module.exports = CategoryTree

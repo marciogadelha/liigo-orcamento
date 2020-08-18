@@ -1,6 +1,7 @@
-import axios from 'axios';
+const axios = require('axios');
 
-export default class FlexyAPI {
+const FlexyAPI = class FlexyAPI {
+  
   constructor() {
     this.api = axios.create({
       baseURL: 'https://liigo.api.flexy.com.br/platform/api/',
@@ -45,3 +46,5 @@ export default class FlexyAPI {
   }
   
 }
+
+module.exports = FlexyAPI

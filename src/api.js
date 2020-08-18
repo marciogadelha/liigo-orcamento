@@ -1,45 +1,21 @@
 const express = require('express');
-const axios = require('axios');
+const cors = require('cors')
+const Categories = require('./orcamento/Categories')
 
 const api = express();
 
-api.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    next();
-});
-  
-api.use(express.json());
+api.use(cors())
 
-api.get('/categories', async (req, res) => {
-    const connection = axios.create({
-        baseURL: 'https://liigo.api.flexy.com.br/platform/api/',
-    })
-    const config = {
-        params: {
-            token: "ud6qqbo04cn3pujrebunba",
-            limit: 50,
-            offset: 0
-        }
-    }
-    const response = await connection.get('categories', config)
-    console.log(response.data)
-    return res.json(response.data)
-});
+const corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
-api.get('/products', async (req, res) => {
-    const connection = axios.create({
-        baseURL: 'https://liigo.api.flexy.com.br/platform/api/',
-    })
-    const config = {
-        params: {
-            token: "ud6qqbo04cn3pujrebunba",
-            limit: 50,
-            offset: 0
-        }
-    }
-    const response = await connection.get('products', config)
-    console.log(response.data)
-    return res.json(response.data)
+const categories = new Categories()
+
+api.get('/categories', cors(corsOptions), async (req, res) => {
+    const response = await categories.getLayout()
+    res.send(response)
 });
 
 module.exports = api;

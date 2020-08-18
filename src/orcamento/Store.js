@@ -1,5 +1,5 @@
 
-export default class Store {
+const Store = class Store {
     constructor(name, categories) {
         this.name = name
         this.categories = []
@@ -18,3 +18,5 @@ export default class Store {
         }
     }
 }
+
+module.exports = Store
