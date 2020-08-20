@@ -5,11 +5,11 @@
     <meta charset="utf-8">
     <title>Orçamento</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/style.css">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
-    <link rel="stylesheet" href="bootstrap.css" />
+    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/bootstrap.css" />
 </head>
 
 <body>
@@ -21,6 +21,15 @@
             <br>
             <h4 class='ml-1 mr-1 mb-3'>Faça uma breve descrição do que procura:</h4>
             <textarea class="form-control ml-3 mr-4 pr-3" rows=5 placeholder="Descreva o produto ou serviço que procura..."></textarea>
+            <div class="f2-product-attributes">
+                <hr>
+                <div class="f2-product-attribute" id="f2-product-attribute-Servico">
+                    <label class="control-label" for="attributeValues[Servico]">Enviar arquivo:</label>
+                    <input type="file" id="f2_order_attribute_Servico" class="form-control" name="attributeValues[Servico]">
+                    <!-- <span id="helpBlock-Servico" class="hidden help-block">Este é um campo de preenchimento obrigatório.</span> -->
+                </div>
+                <hr>
+            </div>
             <!-- <button type="submit" class="btn btn-checkout btn-light-blue">
                 <i class="fa fa-shopping-quote"></i> Solicitar orçamento
             </button> -->
@@ -60,6 +69,7 @@
                 })
                 $('div').on('shown.bs.tab', 'a.active', function() {
                     let categorySelected = $('a.active').last().attr('aria-controls')
+                    console.log(categorySelected)
                     // $.ajax({url: "localhost:3000/stores/"+categorySelected , success: function(result){
                     //     //$("#clientCategories").html(result);
                     //     console.log(result)
