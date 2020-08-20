@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/style.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
+    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/bootstrap.css" />
+</head>
+<body>
+    <iframe id="myiframe" width="100%" height="720px" src="http://localhost:3000" title="Orçamento" frameborder="0" scrolling="no">
+    </iframe>
+    <script>
+        window.addEventListener('message', event => {
+            console.log(event.data);
+        });
+    </script>
+</body>
+</html>
