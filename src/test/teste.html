@@ -1,22 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
     <title>Document</title>
-    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/style.css">
+    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/css/style.css" />
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
-    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/bootstrap.css" />
+    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/css/bootstrap.css" />
 </head>
 <body>
-    <iframe id="myiframe" width="100%" height="720px" src="http://localhost:3000" title="Orçamento" frameborder="0" scrolling="no">
-    </iframe>
+    <section>
+        <form id="myform" method="post" action="./teste.html" action="#">
+            <iframe id="myiframe" width="100%" height="720px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no"></iframe>
+            <button onclick="test()" class="btn btn-primary ml-3">Click me!</button>
+        </form>
+    </section>
     <script>
         window.addEventListener('message', event => {
             console.log(event.data);
         });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"
+    integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
+    <script>
+        function test() {
+            console.log("Before!")
+            alert("OK")
+            console.log("After!")
+            $("#myform2").ajaxSubmit({url: '#', type: 'post'})
+        }
+        function test2() {
+            console.log("Before 2!")
+            alert("OK 2")
+            console.log("After 2!")
+            $("#myform").ajaxSubmit({url: '#', type: 'post'})
+        }
     </script>
 </body>
 </html>
