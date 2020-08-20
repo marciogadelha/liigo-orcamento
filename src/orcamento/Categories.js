@@ -27,7 +27,7 @@ const Categories = class Categories {
   loadList(category) {
     let div = dom.window.document.createElement('div')
     div.setAttribute('id', category.referenceCode)
-    div.setAttribute('class', 'overflow-auto list-group tab-pane fade collapse')
+    div.setAttribute('class', 'overflow-auto list-group tab-pane collapse')
     div.setAttribute('height', '500')
     div.setAttribute('maxheight', '500')
     div.setAttribute('role', 'tab')
