@@ -89,7 +89,7 @@ const Categories = class Categories {
 
       let firstLevel = dom.window.document.createElement('div')
       firstLevel.setAttribute('id', 'first-level')
-      firstLevel.setAttribute('class', 'col-3 pl-0 pr-0 h-100 mh-100 overflow-auto list-group tab-pane fade show active')
+      firstLevel.setAttribute('class', 'col-3 pl-0 pr-0 h-100 mh-100 overflow-auto list-group tab-pane show active')
       firstLevel.setAttribute('role', 'tablist')
       const categoriesNode = this.root.findNodeByName("Categorias")
       for (let category of categoriesNode.nodes) {
