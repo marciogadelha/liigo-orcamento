@@ -40,8 +40,8 @@
       crossorigin="anonymous"></script>
     <script>
         $(document).ready(function() {
-            $.get("http://localhost:3000/categories", function(result) {
-            //$.get("https://liigo-orcamento.herokuapp.com/categories", function(result) {                
+            //$.get("http://localhost:3000/categories", function(result) {
+            $.get("https://liigo-orcamento.herokuapp.com/categories", function(result) {                
                 $("#clientCategories").html(result);
 
                 $('#first-level').on('hide.bs.tab', 'a', function() {

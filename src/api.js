@@ -23,12 +23,12 @@ api.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/index.html'))
 });
 
-api.get('css/bootstrap.css', (req, res) => {
-    res.sendFile(path.join(__dirname + 'css/bootstrap.css'))
+api.get('/css/bootstrap.css', (req, res) => {
+    res.sendFile(path.join(__dirname + '/css/bootstrap.css'))
 });
 
-api.get('css/style.css', (req, res) => {
-    res.sendFile(path.join(__dirname + 'css/style.css'))
+api.get('/css/style.css', (req, res) => {
+    res.sendFile(path.join(__dirname + '/css/style.css'))
 });
 
 module.exports = api;
