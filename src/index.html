@@ -70,6 +70,7 @@
                 $('div').on('shown.bs.tab', 'a.active', function() {
                     let categorySelected = $('a.active').last().attr('aria-controls')
                     console.log(categorySelected)
+                    teste(categorySelected)
                     // $.ajax({url: "localhost:3000/stores/"+categorySelected , success: function(result){
                     //     //$("#clientCategories").html(result);
                     //     console.log(result)
