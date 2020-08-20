@@ -13,7 +13,7 @@ const Categories = class Categories {
       this.divCategory = dom.window.document.createElement('div')
       this.divCategory.setAttribute('id', 'categories')
       this.divCategory.setAttribute('class', 'row ml-3 mr-3 h-100 mh-100 overflow-auto')
-      this.main()
+      setInterval(this.main, 300000)
   }
 
   getLayout() {
@@ -77,9 +77,7 @@ const Categories = class Categories {
     this.divCategory.appendChild(fourthLevel)
   }
 
-  async main() {
-    while(true) {
-      
+  main = async () => {
       const categories = await this.apiFlexy.getCategories()
       console.log(categories)
       this.root.insertArrayNodes(categories)
@@ -138,8 +136,6 @@ const Categories = class Categories {
       }
       console.log(stores)
       this.root.printTree('')
-
-    }
   }
 }
 
