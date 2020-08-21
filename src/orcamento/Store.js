@@ -1,7 +1,7 @@
 
 const Store = class Store {
-    constructor(name, categories) {
-        this.name = name
+    constructor(referenceCode, categories) {
+        this.referenceCode = referenceCode
         this.categories = []
         this.addCategory(categories)
     }

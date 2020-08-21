@@ -13,7 +13,7 @@ const FlexyAPI = class FlexyAPI {
     while(!response) {
       try {
         response = await this.api.get(info, config)
-        console.log(response)
+        // console.log(response)
       } catch(error) {
         console.log(error.message)
       }
@@ -30,10 +30,7 @@ const FlexyAPI = class FlexyAPI {
       }
     }
     let responseData = []
-    console.log("nextResponse: ")
     let nextResponse = await this.getUntilSuccess(info, config)
-    console.log("Teste")
-    console.log(nextResponse)
     responseData = responseData.concat(nextResponse.data)
     while(nextResponse.data.length === config.params.limit) {
       console.log(config.params.offset)

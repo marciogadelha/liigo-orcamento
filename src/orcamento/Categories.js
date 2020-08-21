@@ -13,7 +13,8 @@ const Categories = class Categories {
       this.divCategory = dom.window.document.createElement('div')
       this.divCategory.setAttribute('id', 'categories')
       this.divCategory.setAttribute('class', 'row ml-3 mr-3 h-100 mh-100 overflow-auto')
-      setInterval(this.main, 300000)
+      //setInterval(this.main, 30000)
+      this.main()
   }
 
   getLayout() {
@@ -111,27 +112,53 @@ const Categories = class Categories {
       this.loadSubCategories(categoriesNode.nodes)
 
       const products = await this.apiFlexy.getProducts()
-      console.log(products)
+      // console.log(products)
 
       let stores = []
       for (let p of products) {
-        for (let c of p.categories) {
-          let node = this.root.findNode(c)
-          if (node) {
-            node.addStore(p.shoppingStore)
+        for (let productStore of p.masterVariant.distributionCenterList) {
+          let store = null
+          for (let s of stores) {
+            if (s.referenceCode == productStore.distributionCenter.referenceCode) {
+              store = s
+              break
+            }
+          }
+          if (store) {
+            store.addCategory(p.categories)
+          } else {
+            stores.push(new Store(productStore.distributionCenter.referenceCode, p.categories))
           }
         }
-        let store = null
-        for (let s of stores) {
-          if (s.name == p.shoppingStore) {
-            store = s
-            break
+      }
+
+      // let stores = []
+      // for (let p of products) {
+      //   let productStores = null
+      //   for (let s of stores) {
+      //     if (s.name == p.shoppingStore) {
+      //       store = s
+      //       break
+      //     }
+      //   }
+      //   if (store) {
+      //     store.addCategory(p.categories)
+      //   } else {
+      //     stores.push(new Store(p.shoppingStore, p.categories))
+      //   }
+      // }
+
+
+      for (let p of products) {
+        if (Array.isArray(p.categories)) {
+          for (let c of p.categories) {
+            let node = this.root.findNode(c)
+            if (node) {
+              for (let productStore of p.masterVariant.distributionCenterList) {
+                node.addStore(productStore.distributionCenter.referenceCode)
+              }
+            }
           }
-        }
-        if (store) {
-          store.addCategory(p.categories)
-        } else {
-          stores.push(new Store(p.shoppingStore, p.categories))
         }
       }
       console.log(stores)
