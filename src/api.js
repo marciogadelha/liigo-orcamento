@@ -19,6 +19,11 @@ api.get('/categories', cors(corsOptions), async (req, res) => {
     res.send(response)
 });
 
+api.get('/stores/:categorySelected', cors(corsOptions), async (req, res) => {
+    const response = await categories.getStores(req.params.categorySelected)
+    res.json(response)
+});
+
 api.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/index.html'))
 });

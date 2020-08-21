@@ -66,39 +66,44 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
 crossorigin="anonymous"></script>
 <script>
-    var categorySelected = null
+    var shoppingStoreList = []
     $(document).ready(function() {
         window.addEventListener('message', event => {
+            console.log("Event data:")
             console.log(event.data);
-            categorySelected = event.data
+            shoppingStoreList = event.data
         });
     })
 </script>
 <script>
     function quoteFormSubmit() {
-        console.log(categorySelected)
-        $.ajax({
-                url: "/quote/add",
-                type: "post",
-                dataType: "json",
-                data: {
-                    id: "1572",
-                    quantity: 1,
-                    additionalVariantId: [],
-                    distributionCenter: [],
-                    attributeValues: {}
-                },
-                beforeSend: function() {
-                    console.log("Before!")
-                },
-                success: function(e) {
-                    console.log("Success!")
-                },
-                error: function(e) {
-                    console.log("Error!")
-                    console.log(e)
-                }
-            })
+        console.log(shoppingStoreList)
+        if (Array.isArray(shoppingStoreList)) {
+            for (shoppingStore of shoppingStoreList) {
+                $.ajax({
+                    url: "/quote/add",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        id: "1572",
+                        quantity: 1,
+                        additionalVariantId: [],
+                        distributionCenter: shoppingStore,
+                        attributeValues: {}
+                    },
+                    beforeSend: function() {
+                        console.log("Before!")
+                    },
+                    success: function(e) {
+                        console.log("Success!")
+                    },
+                    error: function(e) {
+                        console.log("Error!")
+                        console.log(e)
+                    }
+                })
+            }
+        }
         $.post('{{ quoteUrl }}')
     }
 </script>

@@ -62,12 +62,15 @@
                 })
                 $('div').on('shown.bs.tab', 'a.active', function() {
                     let categorySelected = $('a.active').last().attr('aria-controls')
-                    window.parent.postMessage(categorySelected, '*')
-                    //parent.contentWindow.postMessage(anyVariable, '*');
-                    // $.ajax({url: "localhost:3000/stores/"+categorySelected , success: function(result){
-                    //     //$("#clientCategories").html(result);
-                    //     console.log(result)
-                    // }});
+                    // window.parent.postMessage(categorySelected, '*')
+                    // var shoppingStoreList = []
+                    //$.get("http://localhost:3000/stores/" + categorySelected, function(result) {
+                    $.get("https://liigo-orcamento.herokuapp.com/stores/" + categorySelected, function(result) {
+                        console.log("Evento disparado dentro do iframe!")
+                        console.log(result)
+                        window.parent.postMessage(result, '*')
+                        // $("#clientCategories").html(result);
+                    });
                 })
             });
         });
