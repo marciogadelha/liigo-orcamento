@@ -50,6 +50,27 @@ const FlexyAPI = class FlexyAPI {
     const responseData = await this.getData('products', 50)
     return responseData
   }
+
+  async getProduct(product) {
+    const config = {
+      params: {
+        token: "ud6qqbo04cn3pujrebunba",
+      }
+    }
+    const response = await this.getUntilSuccess('products/' + product, config)
+    return response.data[0]
+  }
+
+  async getStore(store) {
+    const config = {
+      params: {
+        token: "ud6qqbo04cn3pujrebunba",
+        referenceCodes: store
+      }
+    }
+    const response = await this.getUntilSuccess('shopping-store', config)
+    return response.data[0]
+  }
   
 }
 

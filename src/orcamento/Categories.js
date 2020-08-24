@@ -1,6 +1,6 @@
 const FlexyAPI = require('./FlexyAPI');
 const CategoryTree = require('./CategoryTree');
-const Store = require('./Store');
+// const Store = require('./Store');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const dom = new JSDOM();
@@ -79,6 +79,12 @@ const Categories = class Categories {
   }
 
   main = async () => {
+    while (true) {
+      await this.load()
+    }
+  }
+
+  load = async() => {
       const categories = await this.apiFlexy.getCategories()
       console.log(categories)
       this.root.insertArrayNodes(categories)
@@ -111,43 +117,24 @@ const Categories = class Categories {
 
       this.loadSubCategories(categoriesNode.nodes)
 
-      const products = await this.apiFlexy.getProducts()
-      // console.log(products)
-
-      let stores = []
-      for (let p of products) {
-        for (let productStore of p.masterVariant.distributionCenterList) {
-          let store = null
-          for (let s of stores) {
-            if (s.referenceCode == productStore.distributionCenter.referenceCode) {
-              store = s
-              break
-            }
-          }
-          if (store) {
-            store.addCategory(p.categories)
-          } else {
-            stores.push(new Store(productStore.distributionCenter.referenceCode, p.categories))
+      let ableStores = []
+      const budgetProduct = await this.apiFlexy.getProduct('solicitacaoorcamento')
+      //console.log(budgetProduct)
+      //console.log(budgetProduct.masterVariant)
+      console.log(budgetProduct.masterVariant.distributionCenterList)
+      const budgetStores = budgetProduct.masterVariant.distributionCenterList
+      for (let budgetStore of budgetStores) {
+        if (budgetStore.distributionCenter.referenceCode && ableStores.indexOf(budgetStore.distributionCenter.referenceCode) == -1) {
+          let ableStore = await this.apiFlexy.getStore(budgetStore.distributionCenter.referenceCode)
+          if (ableStore && ableStore.isEnabled && ableStore.isActivated) {
+            ableStores.push(ableStore.referenceCode)
           }
         }
       }
+      console.log(ableStores)
 
-      // let stores = []
-      // for (let p of products) {
-      //   let productStores = null
-      //   for (let s of stores) {
-      //     if (s.name == p.shoppingStore) {
-      //       store = s
-      //       break
-      //     }
-      //   }
-      //   if (store) {
-      //     store.addCategory(p.categories)
-      //   } else {
-      //     stores.push(new Store(p.shoppingStore, p.categories))
-      //   }
-      // }
-
+      const products = await this.apiFlexy.getProducts()
+      // console.log(products)
 
       for (let p of products) {
         if (Array.isArray(p.categories)) {
@@ -155,13 +142,14 @@ const Categories = class Categories {
             let node = this.root.findNode(c)
             if (node) {
               for (let productStore of p.masterVariant.distributionCenterList) {
-                node.addStore(productStore.distributionCenter.referenceCode)
+                if (productStore.distributionCenter.referenceCode && ableStores.indexOf(productStore.distributionCenter.referenceCode) != -1) {
+                  node.addStore(productStore.distributionCenter.referenceCode)
+                }
               }
             }
           }
         }
       }
-      console.log(stores)
       this.root.printTree('')
   }
 }
