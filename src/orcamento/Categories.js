@@ -81,6 +81,7 @@ const Categories = class Categories {
   main = async () => {
     while (true) {
       await this.load()
+      await this.apiFlexy.sleep(60000)
     }
   }
 
@@ -152,6 +153,7 @@ const Categories = class Categories {
       }
       this.root.printTree('')
   }
+
 }
 
 module.exports = Categories;

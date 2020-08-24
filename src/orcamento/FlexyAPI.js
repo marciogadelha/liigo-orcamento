@@ -16,6 +16,7 @@ const FlexyAPI = class FlexyAPI {
         // console.log(response)
       } catch(error) {
         console.log(error.message)
+        await this.sleep(60000)
       }
     }
     return response
@@ -71,7 +72,10 @@ const FlexyAPI = class FlexyAPI {
     const response = await this.getUntilSuccess('shopping-store', config)
     return response.data[0]
   }
-  
+
+  sleep = async (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 }
 
 module.exports = FlexyAPI
