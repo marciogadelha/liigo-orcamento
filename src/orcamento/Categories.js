@@ -118,23 +118,13 @@ const Categories = class Categories {
 
       this.loadSubCategories(categoriesNode.nodes)
 
-      const teste1 = await (new FlexyAPI()).getStore("usadas")
-      console.log(teste1)
-      const teste2 = await (new FlexyAPI()).getStore("shopping-reference-code")
-      console.log(teste2)
       let ableStores = []
       const budgetProduct = await this.apiFlexy.getProduct('solicitacaoorcamento')
-      const teste3 = await (new FlexyAPI()).getStore("usadas")
-      console.log(teste3)
-      const teste4 = await (new FlexyAPI()).getStore("shopping-reference-code")
-      console.log(teste4)
-      //console.log(budgetProduct)
-      //console.log(budgetProduct.masterVariant)
-      console.log(budgetProduct.masterVariant.distributionCenterList)
+
       const budgetStores = budgetProduct.masterVariant.distributionCenterList
       for (let budgetStore of budgetStores) {
         if (budgetStore.distributionCenter.referenceCode && ableStores.indexOf(budgetStore.distributionCenter.referenceCode) == -1) {
-          let ableStore = await (new FlexyAPI()).getStore(budgetStore.distributionCenter.referenceCode)
+          let ableStore = await this.apiFlexy.getStore(budgetStore.distributionCenter.referenceCode)
           if (ableStore && ableStore.isEnabled && ableStore.isActivated) {
             ableStores.push(ableStore.referenceCode)
           }

@@ -15,8 +15,6 @@ const FlexyAPI = class FlexyAPI {
         console.log("GET Info: " + info)
         console.log("GET Config: " + config.params.referenceCodes)
         response = await this.api.get(info, config)
-        console.log(response)
-        console.log(response.data)
       } catch(error) {
         console.log(error.message)
         await this.sleep(10000)
@@ -73,7 +71,7 @@ const FlexyAPI = class FlexyAPI {
       }
     }
     const response = await this.getUntilSuccess('shopping-store', config)
-    return response.data
+    return response.data[0]
   }
 
   sleep = async (ms) => {
