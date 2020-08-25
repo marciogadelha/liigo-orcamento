@@ -12,12 +12,11 @@ const FlexyAPI = class FlexyAPI {
     let response = null
     while(!response) {
       try {
-        console.log("GET Info: " + info)
-        console.log("GET Config: " + config.params.referenceCodes)
+        console.log(info)
+        console.log(config.params.referenceCodes)
         response = await this.api.get(info, config)
       } catch(error) {
         console.log(error.message)
-        await this.sleep(10000)
       }
     }
     return response

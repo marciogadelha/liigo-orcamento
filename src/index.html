@@ -39,7 +39,7 @@
     <script>
         $(document).ready(function() {
             //$.get("http://localhost:3000/categories", function(result) {
-            $.get("https://104.154.236.96:3000/categories", function(result) {                
+            $.get("https://liigo-orcamento.herokuapp.com/categories", function(result) {                
                 $("#clientCategories").html(result);
 
                 $('#first-level').on('hide.bs.tab', 'a', function() {
@@ -65,8 +65,7 @@
                     // window.parent.postMessage(categorySelected, '*')
                     // var shoppingStoreList = []
                     //$.get("http://localhost:3000/stores/" + categorySelected, function(result) {
-                    //$.get("https://liigo-orcamento.herokuapp.com/stores/" + categorySelected, function(result) {
-                    $.get("http://104.154.236.96:3000/stores/" + categorySelected, function(result) {
+                    $.get("https://liigo-orcamento.herokuapp.com/stores/" + categorySelected, function(result) {
                         console.log("Evento disparado dentro do iframe!")
                         console.log(result)
                         window.parent.postMessage(result, '*')
