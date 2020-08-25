@@ -14,7 +14,6 @@ const FlexyAPI = class FlexyAPI {
       try {
         console.log("GET: " + info)
         response = await this.api.get(info, config)
-        // console.log(response)
       } catch(error) {
         console.log(error.message)
         await this.sleep(60000)
