@@ -13,7 +13,7 @@ const FlexyAPI = class FlexyAPI {
     while(!response) {
       try {
         console.log("GET Info: " + info)
-        console.log("GET Config: " + config)
+        console.log("GET Config: " + config.params.referenceCodes)
         response = await this.api.get(info, config)
         console.log(response)
         console.log(response.data)

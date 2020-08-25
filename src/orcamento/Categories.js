@@ -126,7 +126,7 @@ const Categories = class Categories {
       const budgetStores = budgetProduct.masterVariant.distributionCenterList
       for (let budgetStore of budgetStores) {
         if (budgetStore.distributionCenter.referenceCode && ableStores.indexOf(budgetStore.distributionCenter.referenceCode) == -1) {
-          let ableStore = await this.apiFlexy.getStore(budgetStore.distributionCenter.referenceCode)
+          let ableStore = await (new FlexyAPI()).getStore(budgetStore.distributionCenter.referenceCode)
           if (ableStore && ableStore.isEnabled && ableStore.isActivated) {
             ableStores.push(ableStore.referenceCode)
           }
