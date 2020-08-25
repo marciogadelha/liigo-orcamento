@@ -118,8 +118,16 @@ const Categories = class Categories {
 
       this.loadSubCategories(categoriesNode.nodes)
 
+      const teste1 = await (new FlexyAPI()).getStore("usadas")
+      console.log(teste1)
+      const teste2 = await (new FlexyAPI()).getStore("shopping-reference-code")
+      console.log(teste2)
       let ableStores = []
       const budgetProduct = await this.apiFlexy.getProduct('solicitacaoorcamento')
+      const teste3 = await (new FlexyAPI()).getStore("usadas")
+      console.log(teste3)
+      const teste4 = await (new FlexyAPI()).getStore("shopping-reference-code")
+      console.log(teste4)
       //console.log(budgetProduct)
       //console.log(budgetProduct.masterVariant)
       console.log(budgetProduct.masterVariant.distributionCenterList)

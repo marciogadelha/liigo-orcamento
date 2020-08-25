@@ -73,7 +73,7 @@ const FlexyAPI = class FlexyAPI {
       }
     }
     const response = await this.getUntilSuccess('shopping-store', config)
-    return response.data[0]
+    return response.data
   }
 
   sleep = async (ms) => {
