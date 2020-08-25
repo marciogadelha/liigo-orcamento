@@ -81,7 +81,7 @@ const Categories = class Categories {
   main = async () => {
     while (true) {
       await this.load()
-      await this.apiFlexy.sleep(60000)
+      await this.apiFlexy.sleep(600000)
     }
   }
 
@@ -118,15 +118,19 @@ const Categories = class Categories {
 
       this.loadSubCategories(categoriesNode.nodes)
 
-      let ableStores = []
-      const budgetProduct = await this.apiFlexy.getProduct('solicitacaoorcamento')
+      const stores = await this.apiFlexy.getStores()
 
+      const budgetProduct = await this.apiFlexy.getProduct('solicitacaoorcamento')
       const budgetStores = budgetProduct.masterVariant.distributionCenterList
+      let ableStores = []
       for (let budgetStore of budgetStores) {
-        if (budgetStore.distributionCenter.referenceCode && ableStores.indexOf(budgetStore.distributionCenter.referenceCode) == -1) {
-          let ableStore = await this.apiFlexy.getStore(budgetStore.distributionCenter.referenceCode)
-          if (ableStore && ableStore.isEnabled && ableStore.isActivated) {
-            ableStores.push(ableStore.referenceCode)
+        const referenceCodeStore = budgetStore.distributionCenter.referenceCode
+        if (referenceCodeStore && ableStores.indexOf(referenceCodeStore) == -1) {
+          const store = stores.find((s) => {
+            return (s.referenceCode === referenceCodeStore && s.isActivated === true && s.isEnabled === true)
+          })
+          if (store) {
+            ableStores.push(store.referenceCode)
           }
         }
       }

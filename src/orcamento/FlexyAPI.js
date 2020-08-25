@@ -13,7 +13,6 @@ const FlexyAPI = class FlexyAPI {
     while(!response) {
       try {
         console.log(info)
-        console.log(config.params.referenceCodes)
         response = await this.api.get(info, config)
       } catch(error) {
         console.log(error.message)
@@ -46,7 +45,12 @@ const FlexyAPI = class FlexyAPI {
     const responseData = await this.getData('categories', 100)
     return responseData
   }
-  
+
+  async getStores() {
+    const responseData = await this.getData('shopping-store', 100)
+    return responseData
+  }
+
   async getProducts() {
     const responseData = await this.getData('products', 50)
     return responseData
@@ -62,16 +66,16 @@ const FlexyAPI = class FlexyAPI {
     return response.data[0]
   }
 
-  async getStore(store) {
-    const config = {
-      params: {
-        token: "ud6qqbo04cn3pujrebunba",
-        referenceCodes: store
-      }
-    }
-    const response = await this.getUntilSuccess('shopping-store', config)
-    return response.data[0]
-  }
+  // async getStore(store) {
+  //   const config = {
+  //     params: {
+  //       token: "ud6qqbo04cn3pujrebunba",
+  //       referenceCodes: store
+  //     }
+  //   }
+  //   const response = await this.getUntilSuccess('shopping-store', config)
+  //   return response.data[0]
+  // }
 
   sleep = async (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
