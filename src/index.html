@@ -11,22 +11,7 @@
 </head>
 
 <body>
-    <div class='ml-1 mr-1 mb-3'>
-        <h4 class='ml-1 mr-1 mb-3'>Que tipo de produto ou serviço deseja cotar?</h4>
-        <div id="clientCategories">
-        </div>
-        <br>
-        <h4 class='ml-1 mr-1 mb-3'>Faça uma breve descrição do que procura:</h4>
-        <textarea class="form-control ml-3 mr-4 pr-3" rows=5 placeholder="Descreva o produto ou serviço que procura..."></textarea>
-        <div class="f2-product-attributes">
-            <hr>
-            <div class="f2-product-attribute" id="f2-product-attribute-Servico">
-                <label class="control-label" for="attributeValues[Servico]">Enviar arquivo:</label>
-                <input type="file" id="f2_order_attribute_Servico" class="form-control" name="attributeValues[Servico]">
-                <!-- <span id="helpBlock-Servico" class="hidden help-block">Este é um campo de preenchimento obrigatório.</span> -->
-            </div>
-            <hr>
-        </div>
+    <div id="clientCategories">
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"
       crossorigin="anonymous"></script>
@@ -66,8 +51,8 @@
                     // var shoppingStoreList = []
                     //$.get("http://localhost:3000/stores/" + categorySelected, function(result) {
                     $.get("https://liigo-orcamento.herokuapp.com/stores/" + categorySelected, function(result) {
-                        console.log("Evento disparado dentro do iframe!")
-                        console.log(result)
+                        //console.log("Evento disparado dentro do iframe!")
+                        //console.log(result)
                         window.parent.postMessage(result, '*')
                         // $("#clientCategories").html(result);
                     });

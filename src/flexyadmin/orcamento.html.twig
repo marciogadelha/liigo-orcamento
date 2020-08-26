@@ -18,7 +18,26 @@
                         Orçamento
                     </h1>
                 </div>
-                <iframe width="100%" height="720px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no"></iframe>
+                <div class='ml-1 mr-1 mb-3'>
+                    <h4 class='ml-1 mr-1 mb-3'>Que tipo de produto ou serviço deseja cotar?</h4>
+                    <iframe width="100%" height="840px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no"></iframe>
+                    <hr>
+                    <h4 class='ml-1 mr-1 mb-3'>Faça uma breve descrição do que procura:</h4>
+                    <textarea class="form-control ml-3 mr-4 pr-3" rows=5 placeholder="Descreva o produto ou serviço que procura..."></textarea>
+                    <div class="ml-1 mr-1 mb-3 f2-product-attributes">
+                        <hr>
+                        <h4 class="ml-1 mb-3 control-label" for="attributeValues[Servico]">Enviar arquivo:</h4>
+                        <div class="ml-3 f2-product-attribute" id="f2-product-attribute-Servico">
+                            <input class="form-control" type="file" id="f2_order_attribute_Servico" name="attributeValues[Servico]">
+                            <!-- <span id="helpBlock-Servico" class="hidden help-block">Este é um campo de preenchimento obrigatório.</span> -->
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="ml-1">
+                        <input class="ml-1" type="checkbox" required>
+                        <span>Aceito compartilhar meus dados com os fornecedores para que entrem em contato.</span>
+                    </div>
+                </div>
                 {% set hasOrphanSale = quoteVariables.quote.hasOrphanSale %}
                 {% set hasNoOrphanSale = not hasOrphanSale %}
                 {% set quotes = quoteVariables.quotes %}
@@ -69,7 +88,7 @@ crossorigin="anonymous"></script>
     var shoppingStoreList = []
     $(document).ready(function() {
         window.addEventListener('message', event => {
-            console.log("Event data:")
+            //console.log("Event data:")
             console.log(event.data);
             shoppingStoreList = event.data
         });
