@@ -1,0 +1,58 @@
+<div class="cart-list-item">
+    {% for cart in carts if cart.items|length > 0 %}
+        <div class="">
+            {% if cart.shoppingStore %}
+                <h3>
+                    <a href="{{ path("flexy_ftwo_store_shoppingStore_index", {shoppingStoreReferenceCode: cart.shoppingStore.referenceCode}) }}">{{ cart.shoppingStore.name }}</a>
+                    {{ cart.isQuote ? (' (' ~ cart.number ~ ')') : '' }}
+                </h3>
+            {% endif %}
+            <table class="cart-table table wow fadeInLeft" data-wow-duration="1s">
+                <thead>
+                    <tr>
+                        <th class="card_product_image hidden-sm hidden-xs"></th>
+                        <th class="card_product_name">Produto</th>
+                        <th class="card_product_price" width="150">Preço unit.</th>
+                        <th class="card_product_quantity" width="150">Quantidade</th>
+                        <th class="card_product_total" width="120">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart.getItemsWithCartBuyXGetYItems() if not item.isAdditional and not item.variant.isDeleted %}
+                        {% include 'FlexyFtwoStoreBundle:Include/Cart:cart-list-item.html.twig' with {
+                            carts : carts,
+                            item : item,
+                            distributionCenterReferenceCode : (cart.shoppingStore)?cart.shoppingStore.referenceCode:null,
+                            changeQuantity : true,
+                            remove: true
+                        }
+                        %}
+                        {% for additionalItem in item.additionalItems %}
+                            {% include 'FlexyFtwoStoreBundle:Include/Cart:cart-list-item.html.twig' with {
+                                carts : carts,
+                                item : additionalItem,
+                                distributionCenterReferenceCode : distributionCenterReferenceCode,
+                                changeQuantity : true,
+                                remove: true
+                            }
+                            %}
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if cart.isQuote %}
+        <div class="row">
+            <div class="col-md-12">
+                Observações:
+                <br/>
+                {% set observationFieldName = cart.masterSale ? ('observation[' ~ cart.id ~ ']') : 'observation' %}
+                {% set observationParam = app.request.get('observation-' ~ cart.shoppingStore.distributionCenter.referenceCode) %}
+                {% set observationDefault = (observationParam ? observationParam : app.request.get('observation-')) %}
+                <textarea rows="5" name="{{ observationFieldName }}" class="form-control f2-quote-observation" data-observation="observation-{{ cart.shoppingStore.distributionCenter.referenceCode }}" data-quote-id="{{ cart.id }}">{{ (observationDefault ? observationDefault : cart.observation ) }}</textarea>
+                <br/>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>

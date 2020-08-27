@@ -36,4 +36,8 @@ api.get('/css/style.css', (req, res) => {
     res.sendFile(path.join(__dirname + '/css/style.css'))
 });
 
+api.get('/quote-cart.html.twig', (req, res) => {
+    res.sendFile(path.join(__dirname + '/flexyadmin/quote-cart.html.twig'))
+});
+
 module.exports = api;
