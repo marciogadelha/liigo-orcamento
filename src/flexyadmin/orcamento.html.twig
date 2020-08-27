@@ -3,8 +3,13 @@
 {% set quoteVariables = flexy_ftwo_quote_list() %}
 {% set quoteUrl = path('flexy_ftwo_store_quote_finish') %}
 {% block content %}
+<style>
+    textarea {
+        resize: vertical;
+    }
+</style>
 <section>
-    <form id="quoteForm" method="post" action="{{ quoteUrl }}" class="f2-form">
+    <form id="quoteForm" method="post" onsubmit="return quoteFormSubmit()" class="f2-form">
         <div class="second-page-container">
             <div class="container">
                 {% include 'FlexyFtwoStoreBundle:Include:breadcrumbs.html.twig' with {path : [{'title' : 'Orçamento' }]} %}
@@ -14,21 +19,25 @@
                     </div>
                 {% endfor %}
                 <div class="header-for-light">
-                    <h1 class="wow fadeInRight animated animated" data-wow-duration="1s" style="visibility: visible;-webkit-animation-duration: 1s; -moz-animation-duration: 1s; animation-duration: 1s;">
+                    <h1 class="wow fadeInRight animated" data-wow-duration="1s" style="visibility: visible;-webkit-animation-duration: 1s; -moz-animation-duration: 1s; animation-duration: 1s;">
                         Orçamento
                     </h1>
                 </div>
-                <div class='ml-1 mr-1 mb-3'>
+                <div class='wow fadeInLeft animated ml-1 mr-1 mb-3'>
                     <h4 class='ml-1 mr-1 mb-3'>Que tipo de produto ou serviço deseja cotar?</h4>
-                    <iframe width="100%" height="410px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no"></iframe>
+                    <a id="selectCategoryButton" onclick="showIframe()" href="javascript:void(0);" class="btn btn-light-blue">Selecione uma categoria</a>
+			        <iframe id="iframeCategory" width="100%" height="442px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no" class="collapse" seamless></iframe>
                     <hr>
-                    <h4 class='ml-1 mr-1 mb-3'>Faça uma breve descrição do que procura:</h4>
-                    <textarea class="form-control ml-3 mr-4 pr-3" rows=5 placeholder="Descreva o produto ou serviço que procura..."></textarea>
+                    <h4 class='ml-1 mr-1 mb-3'>Nome do produto ou serviço que procura:</h4>
+                    <input type="text" class="form-control ml-3 mr-4 pr-3 rounded" required></input>
+                    <hr>
+                    <h4 class='ml-1 mr-1 mb-3'>Faça uma breve descrição:</h4>
+                    <textarea class="form-control ml-3 mr-4 pr-3 rounded" rows=5 placeholder="Descreva o produto ou serviço que procura..." required></textarea>
                     <div class="ml-1 mr-1 mb-3 f2-product-attributes">
                         <hr>
-                        <h4 class="ml-1 mb-3 control-label" for="attributeValues[Servico]">Enviar arquivo:</h4>
+                        <h4 class="ml-1 mb-3 control-label" for="attributeValues[Servico]">Enviar arquivo (opcional):</h4>
                         <div class="ml-3 f2-product-attribute" id="f2-product-attribute-Servico">
-                            <input class="form-control" type="file" id="f2_order_attribute_Servico" name="attributeValues[Servico]">
+                            <input class="form-control rounded" type="file" id="f2_order_attribute_Servico" name="attributeValues[Servico]">
                             <!-- <span id="helpBlock-Servico" class="hidden help-block">Este é um campo de preenchimento obrigatório.</span> -->
                         </div>
                         <hr>
@@ -38,6 +47,7 @@
                         <span>Aceito compartilhar meus dados com os fornecedores para que entrem em contato.</span>
                     </div>
                 </div>
+                <br>
                 {% set hasOrphanSale = quoteVariables.quote.hasOrphanSale %}
                 {% set hasNoOrphanSale = not hasOrphanSale %}
                 {% set quotes = quoteVariables.quotes %}
@@ -66,13 +76,8 @@
                     <div class="col-md-8"></div>
                     {% endif %}
                     <div class="col-md-12 text-right">
-                        {% if flexy_ftwo_current_user_exists() and hasNoOrphanSale %}
-                            <a href="{{ path('flexy_ftwo_store_quote_export', { 'quoteId' : quoteVariables.quote.id}) }}" class="btn btn-default pull-left">
-                                <i class="fa fa-shopping-quote"></i> Imprimir orçamento
-                            </a>
-                        {% endif %}
                         {% if hasNoOrphanSale %}
-                        <button onclick="quoteFormSubmit()" class="btn btn-checkout btn-light-blue">
+                        <button id="submitButton" type="submit" class="btn btn-checkout btn-light-blue">
                             <i class="fa fa-shopping-quote"></i> Solicitar orçamento
                         </button>
                         {% endif %}
@@ -87,6 +92,10 @@ crossorigin="anonymous"></script>
 <script>
     var shoppingStoreList = []
     $(document).ready(function() {
+        $("#quoteForm").submit(function(e){
+            e.preventDefault();
+            $('#submitButton').removeAttr('disabled')
+        });
         window.addEventListener('message', event => {
             //console.log("Event data:")
             console.log(event.data);
@@ -95,9 +104,15 @@ crossorigin="anonymous"></script>
     })
 </script>
 <script>
+    function showIframe() {
+        $('#selectCategoryButton').hide();
+        $('#iframeCategory').removeClass("collapse")
+    }
+</script>
+<script>
     function quoteFormSubmit() {
         console.log(shoppingStoreList)
-        if (Array.isArray(shoppingStoreList)) {
+        if (Array.isArray(shoppingStoreList) && shoppingStoreList.length > 0) {
             for (shoppingStore of shoppingStoreList) {
                 $.ajax({
                     url: "/quote/add",
@@ -122,8 +137,10 @@ crossorigin="anonymous"></script>
                     }
                 })
             }
+            window.location.href = 'https://www.liigo.com.br/quote/finish'
+        } else {
+            alert("Não há lojas disponíveis na categoria selecionada!")
         }
-        $.post('{{ quoteUrl }}')
     }
 </script>
 {% endblock %}

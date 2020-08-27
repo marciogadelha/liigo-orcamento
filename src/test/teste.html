@@ -1,44 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"></meta>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-    <title>Document</title>
-    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/css/style.css" />
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
-    <link rel="stylesheet" href="https://liigo-orcamento.herokuapp.com/css/bootstrap.css" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
 </head>
-<body>
-    <section>
-        <form id="myform" method="post" action="./teste.html" action="#">
-            <iframe id="myiframe" width="100%" height="720px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no"></iframe>
-            <button onclick="test()" class="btn btn-primary ml-3">Click me!</button>
-        </form>
-    </section>
-    <script>
-        window.addEventListener('message', event => {
-            console.log(event.data);
+<style>
+    textarea {
+        resize: vertical;
+    }
+</style>
+<section>
+	<div>
+		<strong>Nome</strong>: {{ cart.customer.fullName }}<br />
+		<strong>E-mail</strong>: (Para obter todos os dados do cliente, acesse seu painel administrativo clicando <a href="https://www.liigo.com.br/flexyadmin/user/login" target="_blank" >aqui</a>.)<br />
+		<strong>Telefone</strong>: (Para obter todos os dados do cliente, acesse seu painel administrativo clicando <a href="https://www.liigo.com.br/flexyadmin/user/login" target="_blank" >aqui</a>.)<br/>
+		<strong>Endereço</strong>: {{ cart.customer.defaultBillingAddress }}
+	</div>
+    <form id="quoteForm" method="post" onsubmit="quoteFormSubmit()" class="f2-form">
+        <div class="second-page-container">
+            <div class="container">
+                    <div class="alert alert-danger">
+                    </div>
+                <div class="header-for-light">
+                    <h1 class="wow fadeInRight animated" data-wow-duration="1s" style="visibility: visible;-webkit-animation-duration: 1s; -moz-animation-duration: 1s; animation-duration: 1s;">
+                        Orçamento
+                    </h1>
+                </div>
+                <div class='wow fadeInLeft animated ml-1 mr-1 mb-3'>
+                    <h4 class='ml-1 mr-1 mb-3'>Que tipo de produto ou serviço deseja cotar?</h4>
+                    <a id="selectCategoryButton" onclick="showIframe()" href="javascript:void(0);" class="btn btn-light-blue">Selecione uma categoria</a>
+			        <iframe id="iframeCategory" width="100%" height="442px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no" class="collapse" seamless></iframe>
+                    <hr>
+                    <h4 class='ml-1 mr-1 mb-3'>Nome do produto ou serviço que procura:</h4>
+                    <input type="text" class="form-control ml-3 mr-4 pr-3 rounded" required></input>
+                    <hr>
+                    <h4 class='ml-1 mr-1 mb-3'>Faça uma breve descrição:</h4>
+                    <textarea class="form-control ml-3 mr-4 pr-3 rounded" rows=5 placeholder="Descreva o produto ou serviço que procura..." required></textarea>
+                    <div class="ml-1 mr-1 mb-3 f2-product-attributes">
+                        <hr>
+                        <h4 class="ml-1 mb-3 control-label" for="attributeValues[Servico]">Enviar arquivo (opcional):</h4>
+                        <div class="ml-3 f2-product-attribute" id="f2-product-attribute-Servico">
+                            <input class="form-control rounded" type="file" id="f2_order_attribute_Servico" name="attributeValues[Servico]">
+                            <!-- <span id="helpBlock-Servico" class="hidden help-block">Este é um campo de preenchimento obrigatório.</span> -->
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="ml-1">
+                        <input class="ml-1" type="checkbox" required>
+                        <span>Aceito compartilhar meus dados com os fornecedores para que entrem em contato.</span>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="block-form box-border wow fadeInLeft" data-wow-duration="1s">
+                                    <h3><i class="fa fa-truck"></i> CEP de entrega</h3>
+                                    <hr/>
+                                    <div class="input-group">
+                                        <input type="text" class="flexy-input-postcode form-control" name="zipCode" placeholder="Digite seu cep" value="{{ app.request.get('zipCode') }}">
+                                        <span class="input-group-btn">
+                                            <input type="button" class="btn btn-default-1 btn-cep" value="Enviar" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="col-md-8"></div>
+                    <div class="col-md-12 text-right">
+                        <button id="submitButton" type="submit" class="btn btn-checkout btn-light-blue">
+                            <i class="fa fa-shopping-quote"></i> Solicitar orçamento
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+crossorigin="anonymous"></script>
+<script>
+    var shoppingStoreList = []
+    $(document).ready(function() {
+        $("#quoteForm").submit(function(e){
+            e.preventDefault();
         });
-    </script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"
-    integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
-    <script>
-        function test() {
-            console.log("Before!")
-            alert("OK")
-            console.log("After!")
-            $("#myform2").ajaxSubmit({url: '#', type: 'post'})
+        window.addEventListener('message', event => {
+            //console.log("Event data:")
+            console.log(event.data);
+            shoppingStoreList = event.data
+        });
+    })
+</script>
+<script>
+    function showIframe() {
+        $('#selectCategoryButton').hide();
+        $('#iframeCategory').removeClass("collapse")
+    }
+</script>
+<script>
+    function quoteFormSubmit() {
+        console.log(shoppingStoreList)
+        if (Array.isArray(shoppingStoreList) && shoppingStoreList.length > 0) {
+            for (shoppingStore of shoppingStoreList) {
+                $.ajax({
+                    url: "/quote/add",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        id: "1572",
+                        quantity: 1,
+                        additionalVariantId: [],
+                        distributionCenter: shoppingStore,
+                        attributeValues: {}
+                    },
+                    beforeSend: function() {
+                        console.log("Before!")
+                    },
+                    success: function(e) {
+                        console.log("Success!")
+                    },
+                    error: function(e) {
+                        console.log("Error!")
+                        console.log(e)
+                    }
+                })
+            }
+            $.post('{{ quoteUrl }}')
+        } else {
+            console.log($('#submitButton'))
+            alert("Não há lojas disponíveis na categoria selecionada!")
         }
-        function test2() {
-            console.log("Before 2!")
-            alert("OK 2")
-            console.log("After 2!")
-            $("#myform").ajaxSubmit({url: '#', type: 'post'})
-        }
-    </script>
+    }
+</script>
+
+<body>
+	
 </body>
 </html>
