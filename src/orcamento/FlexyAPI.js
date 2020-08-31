@@ -76,12 +76,13 @@ const FlexyAPI = class FlexyAPI {
     const content = {
       "product": {
         "referenceCode": "solicitacaoorcamento",
-        "enabledForEmptyPriceList": enabledForEmptyPriceList
+        "enabledForEmptyPriceList": JSON.parse(enabledForEmptyPriceList)
       }
     }
     let response = null
     while(!response) {
       try {
+        console.log(content)
         response = await this.api.put('products/', content, config)
       } catch(error) {
         console.log(error.message)

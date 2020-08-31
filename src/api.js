@@ -40,9 +40,9 @@ api.get('/quote-cart.html.twig', (req, res) => {
     res.sendFile(path.join(__dirname + '/flexyadmin/quote-cart.html.twig'))
 });
 
-api.get('/quote/:enabledForEmptyPriceList', cors(corsOptions), async (req, res) => {
+api.put('/quote/:enabledForEmptyPriceList', cors(corsOptions), async (req, res) => {
     const response = await categories.putQuoteProduct(req.params.enabledForEmptyPriceList)
-    res.send(response)
+    res.sendStatus(response.status)
 });
 
 module.exports = api;
