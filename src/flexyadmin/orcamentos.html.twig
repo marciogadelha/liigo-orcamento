@@ -88,42 +88,59 @@ crossorigin="anonymous"></script>
         const quoteFinish = parseInt(sessionStorage.getItem("quote-finish"))
 
         if (indexShoppingStoreList < shoppingStoreList.length) {
-            const service = sessionStorage.getItem("service-atrribute-value")
-            if quoteFinish == 0 {
-                $.put("https://liigo-orcamento.herokuapp.com/quote/true", function(result) {
-                    console.log(result)
-                    $.ajax({
-                        url: "/quote/add",
-                        type: "post",
-                        dataType: "json",
-                        data: {
-                            id: "1572",
-                            quantity: 1,
-                            additionalVariantId: [],
-                            distributionCenter: shoppingStoreList[indexShoppingStoreList],
-                            attributeValues: {"Servico": service}
-                        },
-                        beforeSend: function() {
-                            console.log("Before!")
-                        },
-                        success: function(e) {
-                            console.log("Success!")
-                            sessionStorage.setItem("quote-finish", 1)
-                            window.location = '/orcamentos'
-                        },
-                        error: function(e) {
-                            console.log("Error!")
-                            console.log(e)
-                            console.log(shoppingStoreList[indexShoppingStoreList])
-                            sessionStorage.setItem("index-shopping-store-list", indexShoppingStoreList + 1)
-                            window.location = '/orcamentos'
-                        }
-                    })
+            if (quoteFinish == 0) {
+                console.log("Before PUT")
+                const service = sessionStorage.getItem("service-atrribute-value")
+                $.ajax({
+                    url: 'https://liigo-orcamento.herokuapp.com/quote/true',
+                    type: 'PUT',
+                    data: "",
+                    success: function() {
+                        console.log("PUT SUCCESS!")
+                        $.ajax({
+                            url: "/quote/add",
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                id: "1572",
+                                quantity: 1,
+                                additionalVariantId: [],
+                                distributionCenter: shoppingStoreList[indexShoppingStoreList],
+                                attributeValues: {"Servico": service}
+                            },
+                            beforeSend: function() {
+                                console.log("Before!")
+                            },
+                            success: function() {
+                                console.log("Success!")
+                                sessionStorage.setItem("quote-finish", 1)
+                                window.location = '/orcamentos'
+                            },
+                            error: function(e) {
+                                console.log("Error!")
+                                console.log(e)
+                                console.log(shoppingStoreList[indexShoppingStoreList])
+                                sessionStorage.setItem("index-shopping-store-list", indexShoppingStoreList + 1)
+                                window.location = '/orcamentos'
+                            }
+                        })
+                    },
+                    error: function(e) {
+                        console.log("PUT ERROR")
+                        console.log("Error!")
+                        console.log(e)
+                    }
                 })
             } else {
                 const itemName = sessionStorage.getItem("quote-form-name-field")
                 const itemDescription = sessionStorage.getItem("quote-form-description-field")
                 $("textarea").text("Item: " + itemName + "\nDescrição:\n" + itemDescription)
+                console.log("QUOTE FINISH!")
+                sessionStorage.setItem("index-shopping-store-list", indexShoppingStoreList + 1)
+                console.log("INDEX: " + indexShoppingStoreList)
+                sessionStorage.setItem("quote-finish", 0)
+                window.location = '/orcamentos'
+                /*
                 $.ajax({
                     url: "/quote/finish",
                     type: "post",
@@ -146,6 +163,7 @@ crossorigin="anonymous"></script>
                         window.location = '/orcamentos'
                     }
                 })
+                */
             }
         } else {
             console.log("INDEX: " + indexShoppingStoreList)
@@ -155,6 +173,19 @@ crossorigin="anonymous"></script>
             sessionStorage.removeItem("shopping-store-list");
             sessionStorage.removeItem("service-atrribute-value");
             sessionStorage.removeItem("index-shopping-store-list");
+            $.ajax({
+                url: 'https://liigo-orcamento.herokuapp.com/quote/false',
+                type: 'PUT',
+                //data: "",
+                success: function() {
+                    console.log("PUT SUCCESS!")
+                },
+                error: function(e) {
+                    console.log("PUT ERROR")
+                    console.log("Error!")
+                    console.log(e)
+                }
+            })
         }
     })
 </script>

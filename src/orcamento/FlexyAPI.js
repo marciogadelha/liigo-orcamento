@@ -73,7 +73,7 @@ const FlexyAPI = class FlexyAPI {
         token: this.token,
       }
     }
-    const jsonContent = {
+    const content = {
       "product": {
         "referenceCode": "solicitacaoorcamento",
         "enabledForEmptyPriceList": enabledForEmptyPriceList
@@ -82,7 +82,7 @@ const FlexyAPI = class FlexyAPI {
     let response = null
     while(!response) {
       try {
-        response = await this.api.put('products/', jsonContent, config)
+        response = await this.api.put('products/', content, config)
       } catch(error) {
         console.log(error.message)
       }
