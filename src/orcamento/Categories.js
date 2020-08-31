@@ -24,6 +24,10 @@ const Categories = class Categories {
   getStores(categorySelected) {
     return this.root.findNode(categorySelected).stores
   }
+
+  putQuoteProduct(enabledForEmptyPriceList) {
+    return this.apiFlexy.putQuoteProduct(enabledForEmptyPriceList)
+  }
   
   loadList(category) {
     let div = dom.window.document.createElement('div')

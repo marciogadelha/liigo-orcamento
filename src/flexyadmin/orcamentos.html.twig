@@ -1,0 +1,161 @@
+{% extends 'FlexyFtwoStoreBundle:Layout:base.html.twig' %}
+{% block title %}Quote{% endblock %}
+{% set quoteVariables = flexy_ftwo_quote_list() %}
+{% set quoteUrl = path('flexy_ftwo_store_quote_finish') %}
+{% block content %}
+<section>
+    <form method="post" action="{{ quoteUrl }}" class="f2-form">
+        <div class="second-page-container">
+            <div class="container">
+                {% include 'FlexyFtwoStoreBundle:Include:breadcrumbs.html.twig' with {path : [{'title' : 'Orçamento' }]} %}
+                {% for flashMessage in app.session.flashbag.get('store-error') %}
+                    <div class="alert alert-danger">
+                        {{ flashMessage|trans }}
+                    </div>
+                {% endfor %}
+                <div class="header-for-light">
+                    <h1 class="wow fadeInRight animated animated" data-wow-duration="1s" style="visibility: visible;-webkit-animation-duration: 1s; -moz-animation-duration: 1s; animation-duration: 1s;">
+                        Orçamento
+                    </h1>
+                    <br>
+                    <h2 id="aviso-localizando-lojas" class="text-center">
+                        Localizando lojas...
+                    </h2>
+                </div>
+                <div hidden>
+                    {% if quoteVariables.quote.allItems.count > 0 %}
+                        {% set hasOrphanSale = quoteVariables.quote.hasOrphanSale %}
+                        {% set hasNoOrphanSale = not hasOrphanSale %}
+                        {% set quotes = quoteVariables.quotes %}
+                        {% include 'FlexyFtwoStoreBundle:Include/Cart:cart-list.html.twig' with {carts : quotes, changeQuantity : true, remove: true} %}
+                        <div class="row">
+                            {% if hasOrphanSale %}
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="block-form box-border wow fadeInLeft" data-wow-duration="1s">
+                                            <h3><i class="fa fa-truck"></i> CEP de entrega</h3>
+                                            <hr/>
+                                            {% if not hasNoOrphanSale %}
+                                                É necessário preencher o CEP de entrega antes de solicitar o orçamento.
+                                            {% endif %}
+                                            <div class="input-group">
+                                                <input type="text" class="flexy-input-postcode form-control" name="zipCode" placeholder="Digite seu cep" value="{{ app.request.get('zipCode') }}">
+                                                <span class="input-group-btn">
+                                                    <input type="button" class="btn btn-default-1 btn-cep" value="Enviar" />
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                            <div class="col-md-8"></div>
+                            {% endif %}
+                            <div class="col-md-12 text-right">
+                                {% if flexy_ftwo_current_user_exists() and hasNoOrphanSale %}
+                                    <a href="{{ path('flexy_ftwo_store_quote_export', { 'quoteId' : quoteVariables.quote.id}) }}" class="btn btn-default pull-left">
+                                        <i class="fa fa-shopping-quote"></i> Imprimir orçamento
+                                    </a>
+                                {% endif %}
+                                {% if hasNoOrphanSale %}
+                                <button type="submit" class="btn btn-checkout btn-light-blue">
+                                    <i class="fa fa-shopping-quote"></i> Solicitar orçamento
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="header-for-light">
+                            <h2 class="wow fadeInRight animated animated emptyCart" data-wow-duration="1s" style="visibility: visible;-webkit-animation-duration: 1s; -moz-animation-duration: 1s; animation-duration: 1s;">
+                                Nenhum produto em seu orçamento.
+                            </h2>
+                            <a href="/">&larr; Voltar</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form> 
+</section>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function() {
+        //$("form").submit()
+        const shoppingStoreList = JSON.parse(sessionStorage.getItem("shopping-store-list"))
+        //const shoppingStoreList = ["usadas","usadas"]
+        const indexShoppingStoreList = parseInt(sessionStorage.getItem("index-shopping-store-list"))
+        const quoteFinish = parseInt(sessionStorage.getItem("quote-finish"))
+
+        if (indexShoppingStoreList < shoppingStoreList.length) {
+            const service = sessionStorage.getItem("service-atrribute-value")
+            if quoteFinish == 0 {
+                $.put("https://liigo-orcamento.herokuapp.com/quote/true", function(result) {
+                    console.log(result)
+                    $.ajax({
+                        url: "/quote/add",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            id: "1572",
+                            quantity: 1,
+                            additionalVariantId: [],
+                            distributionCenter: shoppingStoreList[indexShoppingStoreList],
+                            attributeValues: {"Servico": service}
+                        },
+                        beforeSend: function() {
+                            console.log("Before!")
+                        },
+                        success: function(e) {
+                            console.log("Success!")
+                            sessionStorage.setItem("quote-finish", 1)
+                            window.location = '/orcamentos'
+                        },
+                        error: function(e) {
+                            console.log("Error!")
+                            console.log(e)
+                            console.log(shoppingStoreList[indexShoppingStoreList])
+                            sessionStorage.setItem("index-shopping-store-list", indexShoppingStoreList + 1)
+                            window.location = '/orcamentos'
+                        }
+                    })
+                })
+            } else {
+                const itemName = sessionStorage.getItem("quote-form-name-field")
+                const itemDescription = sessionStorage.getItem("quote-form-description-field")
+                $("textarea").text("Item: " + itemName + "\nDescrição:\n" + itemDescription)
+                $.ajax({
+                    url: "/quote/finish",
+                    type: "post",
+                    beforeSend: function() {
+                        console.log("Before Finish!")
+                    },
+                    success: function(e) {
+                        console.log("Success Finish!")
+                        sessionStorage.setItem("index-shopping-store-list", indexShoppingStoreList + 1)
+                        console.log("INDEX: " + indexShoppingStoreList)
+                        sessionStorage.setItem("quote-finish", 0)
+                        window.location = '/orcamentos'
+                    },
+                    error: function(e) {
+                        console.log("Error Finish!")
+                        console.log(e)
+                        sessionStorage.setItem("index-shopping-store-list", indexShoppingStoreList + 1)
+                        console.log("INDEX: " + indexShoppingStoreList)
+                        sessionStorage.setItem("quote-finish", 0)
+                        window.location = '/orcamentos'
+                    }
+                })
+            }
+        } else {
+            console.log("INDEX: " + indexShoppingStoreList)
+            $("#aviso-localizando-lojas").text("Pronto! Sua solicitação foi realizada.")
+            sessionStorage.removeItem("quote-form-name-field");
+            sessionStorage.removeItem("quote-form-description-field");
+            sessionStorage.removeItem("shopping-store-list");
+            sessionStorage.removeItem("service-atrribute-value");
+            sessionStorage.removeItem("index-shopping-store-list");
+        }
+    })
+</script>
+{% endblock %}

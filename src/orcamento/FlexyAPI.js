@@ -6,6 +6,7 @@ const FlexyAPI = class FlexyAPI {
     this.api = axios.create({
       baseURL: 'https://liigo.api.flexy.com.br/platform/api/',
     })
+    this.token = "ud6qqbo04cn3pujrebunba"
   }
 
   async getUntilSuccess(info, config) {
@@ -24,7 +25,7 @@ const FlexyAPI = class FlexyAPI {
   async getData(info, limit) {
     const config = {
       params: {
-        token: "ud6qqbo04cn3pujrebunba",
+        token: this.token,
         limit: limit,
         offset: 0
       }
@@ -59,23 +60,35 @@ const FlexyAPI = class FlexyAPI {
   async getProduct(product) {
     const config = {
       params: {
-        token: "ud6qqbo04cn3pujrebunba",
+        token: this.token,
       }
     }
     const response = await this.getUntilSuccess('products/' + product, config)
     return response.data[0]
   }
 
-  // async getStore(store) {
-  //   const config = {
-  //     params: {
-  //       token: "ud6qqbo04cn3pujrebunba",
-  //       referenceCodes: store
-  //     }
-  //   }
-  //   const response = await this.getUntilSuccess('shopping-store', config)
-  //   return response.data[0]
-  // }
+  async putQuoteProduct(enabledForEmptyPriceList) {
+    const config = {
+      params: {
+        token: this.token,
+      }
+    }
+    const jsonContent = {
+      "product": {
+        "referenceCode": "solicitacaoorcamento",
+        "enabledForEmptyPriceList": enabledForEmptyPriceList
+      }
+    }
+    let response = null
+    while(!response) {
+      try {
+        response = await this.api.put('products/', jsonContent, config)
+      } catch(error) {
+        console.log(error.message)
+      }
+    }
+    return response
+  }
 
   sleep = async (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));

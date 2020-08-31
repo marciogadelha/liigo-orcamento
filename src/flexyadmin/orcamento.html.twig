@@ -9,7 +9,7 @@
     }
 </style>
 <section>
-    <form id="quoteForm" method="post" onsubmit="return quoteFormSubmit()" class="f2-form">
+    <form id="quoteForm" method="post" onsubmit="quoteFormSubmit()" class="f2-form">
         <div class="second-page-container">
             <div class="container">
                 {% include 'FlexyFtwoStoreBundle:Include:breadcrumbs.html.twig' with {path : [{'title' : 'Orçamento' }]} %}
@@ -29,10 +29,10 @@
 			        <iframe id="iframeCategory" width="100%" height="442px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no" class="collapse" seamless></iframe>
                     <hr>
                     <h4 class='ml-1 mr-1 mb-3'>Nome do produto ou serviço que procura:</h4>
-                    <input type="text" class="form-control ml-3 mr-4 pr-3 rounded" required></input>
+                    <input id="quote-form-name-field" type="text" class="form-control ml-3 mr-4 pr-3 rounded" required></input>
                     <hr>
                     <h4 class='ml-1 mr-1 mb-3'>Faça uma breve descrição:</h4>
-                    <textarea class="form-control ml-3 mr-4 pr-3 rounded" rows=5 placeholder="Descreva o produto ou serviço que procura..." required></textarea>
+                    <textarea id="quote-form-description-field" class="form-control ml-3 mr-4 pr-3 rounded" rows=5 placeholder="Descreva o produto ou serviço que procura..." required></textarea>
                     <div class="ml-1 mr-1 mb-3 f2-product-attributes">
                         <hr>
                         <h4 class="ml-1 mb-3 control-label" for="attributeValues[Servico]">Enviar arquivo (opcional):</h4>
@@ -51,7 +51,8 @@
                 {% set hasOrphanSale = quoteVariables.quote.hasOrphanSale %}
                 {% set hasNoOrphanSale = not hasOrphanSale %}
                 {% set quotes = quoteVariables.quotes %}
-                {% include 'FlexyFtwoStoreBundle:Include/Cart:cart-list.html.twig' with {carts : quotes, changeQuantity : true, remove: true} %}
+                <div id='quote-cart'>
+                </div>
                 <div class="row">
                     {% if hasOrphanSale %}
                     <div class="col-md-4">
@@ -113,31 +114,26 @@ crossorigin="anonymous"></script>
     function quoteFormSubmit() {
         console.log(shoppingStoreList)
         if (Array.isArray(shoppingStoreList) && shoppingStoreList.length > 0) {
-            for (shoppingStore of shoppingStoreList) {
-                $.ajax({
-                    url: "/quote/add",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        id: "1572",
-                        quantity: 1,
-                        additionalVariantId: [],
-                        distributionCenter: shoppingStore,
-                        attributeValues: {}
-                    },
-                    beforeSend: function() {
-                        console.log("Before!")
-                    },
-                    success: function(e) {
-                        console.log("Success!")
-                    },
-                    error: function(e) {
-                        console.log("Error!")
-                        console.log(e)
-                    }
+            if (typeof(Storage) !== "undefined") {
+                let n = {}
+                $("[name^='hidden_attributeValues']").each(function() {
+                    let e = $(this).prop("name").replace("hidden_attributeValues[", "").replace("]", "");
+                    n[e] = $(this).val()
                 })
+                sessionStorage.setItem("quote-form-name-field", $("#quote-form-name-field").val());
+                sessionStorage.setItem("quote-form-description-field", $("#quote-form-description-field").val());
+                sessionStorage.setItem("shopping-store-list", JSON.stringify(shoppingStoreList));
+                sessionStorage.setItem("service-atrribute-value", n["Servico"]);
+                sessionStorage.setItem("index-shopping-store-list", 0);
+                sessionStorage.setItem("quote-finish", 0);
+                {% if flexy_ftwo_current_user_exists() %}
+                    window.location = '/orcamentos'
+                {% else %}
+                    window.location = '/customer/login?redirect=/orcamentos/'
+                {% endif %}
+            } else {
+                alert("Seu navegador não é suportado!")
             }
-            window.location.href = 'https://www.liigo.com.br/quote/finish'
         } else {
             alert("Não há lojas disponíveis na categoria selecionada!")
         }
