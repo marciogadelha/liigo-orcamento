@@ -42,7 +42,7 @@ api.get('/quote-cart.html.twig', (req, res) => {
 
 api.get('/quote/:enabledForEmptyPriceList', cors(corsOptions), async (req, res) => {
     const response = await categories.putQuoteProduct(req.params.enabledForEmptyPriceList)
-    res.json(response)
+    res.send(response)
 });
 
 module.exports = api;
