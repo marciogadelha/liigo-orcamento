@@ -77,36 +77,10 @@
                 </div>
             </div>
         </div>
-    </form> 
-    <button id='testButton'>Finish</button>
+    </form>
 </section>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
 crossorigin="anonymous"></script>
-<script>
-    $("#testButton").click(function () {
-        $.ajax({
-            url: "/quote/finish",
-            type: "post",
-            beforeSend: function() {
-                //console.log("Finishing quote " + indexShoppingStoreList + "...")
-            },
-            success: function() {
-                console.log("Success!")
-            },
-            error: function(e) {
-                console.log("Error!")
-                console.log(e)
-            },
-            complete: function() {
-                //$("a[href^='/quote/delete']").each(function () {
-                //    console.log($(this).attr("href"))
-                //    $.get($(this).attr("href"))
-                //})
-                //quoteAddFinishAll(indexShoppingStoreList + 1)
-            }
-        })
-    })
-</script>
 <script>
     async function quoteAddFinishAll(indexShoppingStoreList) {
         //const shoppingStoreList = JSON.parse(sessionStorage.getItem("shopping-store-list"))
@@ -161,6 +135,10 @@ crossorigin="anonymous"></script>
                         $("textarea").text("Item: " + itemName + "\nDescrição:\n" + itemDescription)
                         console.log($("textarea").text())
                         console.log("Quote Finish Index: " + indexShoppingStoreList)
+                        $("form").submit(function( event ) {
+                            alert( "Handler for .submit() called." );
+                            event.preventDefault();
+                        });
                         //$.ajax({
                         //    url: "/quote/finish",
                         //    type: "post",
