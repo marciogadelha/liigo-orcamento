@@ -11,11 +11,13 @@ const Categories = class Categories {
       this.apiFlexy = new FlexyAPI()
       this.root = new CategoryTree("root", null, 0)
       this.divCategory = dom.window.document.createElement('div')
+      this.divCategory.setAttribute('id', 'categories')
+      this.divCategory.setAttribute('class', 'd-flex overflow-auto')
       this.main()
   }
 
   getLayout() {
-    return this.divCategory.innerHTML
+    return this.divCategory.outerHTML
   }
 
   getStores(categorySelected) {
@@ -52,25 +54,6 @@ const Categories = class Categories {
     return div
   }
 
-  loadCategories(newDivCategory, categoriesNode) {
-    let firstLevel = dom.window.document.createElement('div')
-    firstLevel.setAttribute('id', 'first-level')
-    firstLevel.setAttribute('class', 'col-3 px-0 overflow-auto list-group tab-pane fade show active')
-    firstLevel.setAttribute('role', 'tablist')
-    for (let category of categoriesNode.nodes) {
-      let a = dom.window.document.createElement('a')
-      a.setAttribute('class', 'list-group-item list-group-item-action')
-      a.setAttribute('id', 'root-' + category.referenceCode)
-      a.setAttribute('data-toggle', 'list')
-      a.setAttribute('href', '#' + category.referenceCode)
-      a.setAttribute('role', 'tab')
-      a.setAttribute('aria-controls', category.referenceCode)
-      a.textContent = category.name
-      firstLevel.appendChild(a)
-    }
-    newDivCategory.appendChild(firstLevel)
-  }
-
   loadSubCategories(newDivCategory, subCategories) {
     let secondLevel = dom.window.document.createElement('div')
     secondLevel.setAttribute('id', 'second-level')
@@ -102,6 +85,25 @@ const Categories = class Categories {
     newDivCategory.appendChild(fourthLevel)
   }
 
+  loadCategories(newDivCategory, categoriesNode) {
+    let firstLevel = dom.window.document.createElement('div')
+    firstLevel.setAttribute('id', 'first-level')
+    firstLevel.setAttribute('class', 'col-3 px-0 overflow-auto list-group tab-pane fade show active')
+    firstLevel.setAttribute('role', 'tablist')
+    for (let category of categoriesNode.nodes) {
+      let a = dom.window.document.createElement('a')
+      a.setAttribute('class', 'list-group-item list-group-item-action')
+      a.setAttribute('id', 'root-' + category.referenceCode)
+      a.setAttribute('data-toggle', 'list')
+      a.setAttribute('href', '#' + category.referenceCode)
+      a.setAttribute('role', 'tab')
+      a.setAttribute('aria-controls', category.referenceCode)
+      a.textContent = category.name
+      firstLevel.appendChild(a)
+    }
+    newDivCategory.appendChild(firstLevel)
+  }
+
   load = async() => {
       const categories = await this.apiFlexy.getCategories()
       console.log(categories)
@@ -114,8 +116,9 @@ const Categories = class Categories {
       let newDivCategory = dom.window.document.createElement('div')
       this.loadCategories(newDivCategory, categoriesNode)
       this.loadSubCategories(newDivCategory, categoriesNode.nodes)
-      this.divCategory = newDivCategory
-
+      this.divCategory.innerHTML = newDivCategory.innerHTML
+      this.divCategory.style.height = categoriesNode.nodes.length*45 + 1 + 'px'
+      
       const stores = await this.apiFlexy.getStores()
 
       const budgetProduct = await this.apiFlexy.getProduct('solicitacaoorcamento')

@@ -16,7 +16,7 @@
         <div id="innerContainer" class="m-auto">
             <h5 class="p-1">Selecione a categoria</h5>
             <div id="categoryContainer" class="border rounded mb-3 p-1">
-                <div id="categories" class="d-flex h-100 mh-100 overflow-auto"></div>
+                <div id="categories" class="d-flex overflow-auto"></div>
             </div>
             <div id="buttonsContainer" class="d-flex justify-content-end">
                 <button id="okButton" class="btn btn-primary col-2">OK</button>
@@ -36,7 +36,7 @@
         $(document).ready(function() {
             //$.get("http://localhost:3000/categories", function(result) {
             $.get("https://liigo-orcamento.herokuapp.com/categories", function(result) {                
-                $("#categories").html(result);
+                $("#categoryContainer").html(result);
 
                 $('#first-level').on('hide.bs.tab', 'a', function() {
                     $('#fourth-level>div').removeClass('active show')
@@ -75,7 +75,7 @@
                     });
                 })
                 $('#selectCategoryButton').click(function () {
-                    window.parent.postMessage({type:'iframeHeight', data:'560px'}, '*')
+                    window.parent.postMessage({type:'iframeHeight', data: parseInt($('#categories').height()) + 154 + 'px'}, '*')
                     $(this).addClass('collapse')
                     $('#outerContainer').removeClass('collapse')
                 })
