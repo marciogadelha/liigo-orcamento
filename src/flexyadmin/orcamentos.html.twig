@@ -131,8 +131,7 @@ crossorigin="anonymous"></script>
     }
 
     $(document).ready(function() {
-        //const shoppingStoreList = JSON.parse(sessionStorage.getItem("shopping-store-list"))
-        const shoppingStoreList = ["usadas", "sprint"]
+        const shoppingStoreList = JSON.parse(sessionStorage.getItem("shopping-store-list"))
         const itemName = sessionStorage.getItem("quote-form-name-field")
         const itemDescription = sessionStorage.getItem("quote-form-description-field")
         const service = sessionStorage.getItem("service-atrribute-value")
