@@ -4,7 +4,7 @@
 {% set quoteUrl = path('flexy_ftwo_store_quote_finish') %}
 {% block content %}
 <section>
-    <form method="post" action="{{ quoteUrl }}" class="f2-form">
+    <form method="post" action="{{ quoteUrl }}" class="f2-form" target="hiddenIframe">
         <div class="second-page-container">
             <div class="container">
                 {% include 'FlexyFtwoStoreBundle:Include:breadcrumbs.html.twig' with {path : [{'title' : 'Orçamento' }]} %}
@@ -59,7 +59,7 @@
                                         </a>
                                     {% endif %}
                                     {% if hasNoOrphanSale %}
-                                    <button type="submit" class="btn btn-checkout btn-light-blue">
+                                    <button id="submitButton" type="submit" class="btn btn-checkout btn-light-blue">
                                         <i class="fa fa-shopping-quote"></i> Solicitar orçamento
                                     </button>
                                     {% endif %}
@@ -78,115 +78,90 @@
             </div>
         </div>
     </form>
+    <iframe id="hiddenIframe" name="hiddenIframe" hidden></iframe>
 </section>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
 crossorigin="anonymous"></script>
 <script>
-    async function quoteAddFinishAll(indexShoppingStoreList) {
-        //const shoppingStoreList = JSON.parse(sessionStorage.getItem("shopping-store-list"))
-        const shoppingStoreList = ["usadas", "sprint"]
-        const service = sessionStorage.getItem("service-atrribute-value")
-        const itemName = sessionStorage.getItem("quote-form-name-field")
-        const itemDescription = sessionStorage.getItem("quote-form-description-field")
-        if (indexShoppingStoreList < shoppingStoreList.length) {
-            let quoteEnabled = false
+    async function quoteAddFinish(shoppingStore, itemName, itemDescription, service) {
+        let quoteEnabled = false
+        await $.ajax({
+            url: 'https://liigo-orcamento.herokuapp.com/quote/true',
+            type: 'PUT',
+            success: function() {
+                console.log("Product quote enabled!")
+                quoteEnabled = true
+            },
+            error: function(e) {
+                console.log("Product quote not enabled!")
+                console.log("Error!")
+                console.log(e)
+            }
+        })
+        if (quoteEnabled) {
+            let quoteAdded = false
             await $.ajax({
-                url: 'https://liigo-orcamento.herokuapp.com/quote/true',
-                type: 'PUT',
+                url: "/quote/add",
+                type: "post",
+                dataType: "json",
+                data: {
+                    id: "1572",
+                    quantity: 1,
+                    additionalVariantId: [],
+                    distributionCenter: shoppingStore,
+                    attributeValues: (service !== "undefined") ? {"Servico": service} : {}
+                },
                 success: function() {
-                    console.log("Product quote enabled!")
-                    quoteEnabled = true
+                    console.log("Quote added!")
+                    quoteAdded = true
                 },
                 error: function(e) {
-                    console.log("Product quote not enabled!")
+                    console.log("Quote not added!")
                     console.log("Error!")
                     console.log(e)
                 }
             })
-            if (quoteEnabled) {
-                let quoteAdded = false
-                await $.ajax({
-                    url: "/quote/add",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        id: "1572",
-                        quantity: 1,
-                        additionalVariantId: [],
-                        distributionCenter: shoppingStoreList[indexShoppingStoreList],
-                        attributeValues: (service !== "undefined") ? {"Servico": service} : {}
-                    },
-                    beforeSend: function() {
-                        console.log("Adding product quote...")
-                    },
-                    success: function() {
-                        console.log("Quote added!")
-                        quoteAdded = true
-                    },
-                    error: function(e) {
-                        console.log("Error!")
-                        console.log(e)
-                    }
+            if (quoteAdded) {
+                $('#chart-quote-container').load(document.URL + ' #chart-quote', function() {
+                    $("textarea").text("Item: " + itemName + "\nDescrição:\n" + itemDescription)
+                    $("#submitButton").click()
                 })
-                if (quoteAdded) {
-                    $('#chart-quote-container').load(document.URL + ' #chart-quote', function() {
-                        console.log("Item:" + itemName)
-                        console.log("Descrição:" + itemDescription)
-                        $("textarea").text("Item: " + itemName + "\nDescrição:\n" + itemDescription)
-                        console.log($("textarea").text())
-                        console.log("Quote Finish Index: " + indexShoppingStoreList)
-                        $("form").submit(function( event ) {
-                            alert( "Handler for .submit() called." );
-                            event.preventDefault();
-                        });
-                        //$.ajax({
-                        //    url: "/quote/finish",
-                        //    type: "post",
-                        //    beforeSend: function() {
-                        //        console.log("Finishing quote " + indexShoppingStoreList + "...")
-                        //    },
-                        //    success: function() {
-                        //        console.log("Success!")
-                        //    },
-                        //    error: function(e) {
-                        //        console.log("Error!")
-                        //        console.log(e)
-                        //    },
-                        //    complete: function() {
-                        //        //$("a[href^='/quote/delete']").each(function () {
-                        //        //    console.log($(this).attr("href"))
-                        //        //    $.get($(this).attr("href"))
-                        //        //})
-                        //        quoteAddFinishAll(indexShoppingStoreList + 1)
-                        //    }
-                        //})
-                    })
-                }
             }
-        } else {
-            //$.ajax({
-            //    url: 'https://liigo-orcamento.herokuapp.com/quote/false',
-            //    type: 'PUT',
-            //    success: function() {
-            //        console.log("Product quote disabled!")
-            //    },
-            //    error: function(e) {
-            //        console.log("Product quote not disabled!")
-            //        console.log("Error!")
-            //        console.log(e)
-            //    }
-            //})
-            sessionStorage.removeItem("quote-form-name-field");
-            sessionStorage.removeItem("quote-form-description-field");
-            sessionStorage.removeItem("shopping-store-list");
-            sessionStorage.removeItem("service-atrribute-value");
-            sessionStorage.removeItem("index-shopping-store-list");
-            $("#aviso-localizando-lojas").text("Pronto! Sua solicitação foi realizada.")
         }
     }
 
     $(document).ready(function() {
-        quoteAddFinishAll(0)
+        //const shoppingStoreList = JSON.parse(sessionStorage.getItem("shopping-store-list"))
+        const shoppingStoreList = ["usadas", "sprint"]
+        const itemName = sessionStorage.getItem("quote-form-name-field")
+        const itemDescription = sessionStorage.getItem("quote-form-description-field")
+        const service = sessionStorage.getItem("service-atrribute-value")
+        var shoppingStoreIndex = 0
+        $('#hiddenIframe').on('load', function() {
+            if (shoppingStoreIndex < shoppingStoreList.length) {
+                quoteAddFinish(shoppingStoreList[shoppingStoreIndex++], itemName, itemDescription, service)
+            } else {
+                $.ajax({
+                    url: 'https://liigo-orcamento.herokuapp.com/quote/false',
+                    type: 'PUT',
+                    success: function() {
+                        console.log("Product quote disabled!")
+                    },
+                    error: function(e) {
+                        console.log("Product quote not disabled!")
+                        console.log("Error!")
+                        console.log(e)
+                    }
+                })
+                sessionStorage.removeItem("quote-form-name-field");
+                sessionStorage.removeItem("quote-form-description-field");
+                sessionStorage.removeItem("shopping-store-list");
+                sessionStorage.removeItem("service-atrribute-value");
+                sessionStorage.removeItem("index-shopping-store-list");
+                $("#aviso-localizando-lojas").text("Pronto! Sua solicitação foi realizada.")
+            }
+        })
+        quoteAddFinish(shoppingStoreList[shoppingStoreIndex++], itemName, itemDescription, service)
     })
 </script>
 {% endblock %}

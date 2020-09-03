@@ -11,7 +11,18 @@
 </head>
 
 <body>
-    <div id="clientCategories">
+    <button id="selectCategoryButton" class="btn btn-primary m-3">Selecione uma categoria</button>
+    <div id="outerContainer" class="border rounded m-3 p-3 collapse">
+        <div id="innerContainer" class="m-auto">
+            <h4 class="p-1">Selecione a categoria</h4>
+            <div id="categoryContainer" class="border rounded w-100 mb-3 p-1">
+                <div id="categories" class="d-flex w-100 h-100 mh-100 overflow-auto"></div>
+            </div>
+            <div id="buttonsContainer" class="w-100 d-flex justify-content-end">
+                <button id="okButton" class="btn btn-primary col-2">OK</button>
+                <button id="cancelButton" class="btn btn-primary ml-3 col-2">Cancelar</button>
+            </div>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"
       crossorigin="anonymous"></script>
@@ -25,7 +36,7 @@
         $(document).ready(function() {
             //$.get("http://localhost:3000/categories", function(result) {
             $.get("https://liigo-orcamento.herokuapp.com/categories", function(result) {                
-                $("#clientCategories").html(result);
+                $("#categories").html(result);
 
                 $('#first-level').on('hide.bs.tab', 'a', function() {
                     $('#fourth-level>div').removeClass('active show')
@@ -45,17 +56,25 @@
                     $('#fourth-level>div').removeClass('active show')
                     $('#fourth-level>div>a').removeClass('active show')
                 })
-                $('div').on('shown.bs.tab', 'a.active', function() {
-                    let categorySelected = $('a.active').last().attr('aria-controls')
-                    // window.parent.postMessage(categorySelected, '*')
-                    // var shoppingStoreList = []
-                    //$.get("http://localhost:3000/stores/" + categorySelected, function(result) {
+                $('#cancelButton').click(function() {
+                    $('#selectCategoryButton').removeClass('collapse')
+                    $('#outerContainer').addClass('collapse')
+                })
+                $('#okButton').click(function() {
+                    const referenceCategorySelected = $('a.active').last().attr('aria-controls')
+                    const nameCategorySelected = $('a.active').last().text()
+                    //$.get("http://localhost:3000/stores/" + referenceCategorySelected, function(result) {
                     $.get("https://liigo-orcamento.herokuapp.com/stores/" + categorySelected, function(result) {
-                        //console.log("Evento disparado dentro do iframe!")
-                        //console.log(result)
                         window.parent.postMessage(result, '*')
-                        // $("#clientCategories").html(result);
+                        if (nameCategorySelected) {
+                            $('#selectCategoryButton').removeClass('collapse').text(nameCategorySelected)
+                            $('#outerContainer').addClass('collapse')
+                        }
                     });
+                })
+                $('#selectCategoryButton').click(function () {
+                    $(this).addClass('collapse')
+                    $('#outerContainer').removeClass('collapse')
                 })
             });
         });

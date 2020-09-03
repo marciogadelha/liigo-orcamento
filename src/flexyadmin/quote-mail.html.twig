@@ -1,0 +1,72 @@
+{% extends 'FlexyFtwoStoreBundle:Mail:base.html.twig' %}
+{% block content %}
+    <div style="text-align:center; background-color:white;padding-top:30px">
+        <img width="20%" src="https://i.imgur.com/46koIAj.png">
+    </div>
+    <div style="{{ style.header }}">
+        <h1>Orçamento solicitado!</h1>
+    </div>
+    <div style="{{ style.inner }}">
+        <p>Olá, {{ cart.customer.fullName }}!</p>
+        <p>Seu orçamento, número <a style="{{ style.link }}" href="{{ url("flexy_ftwo_store_customer_quote_detail", {quoteId : cart.id}) }}"><b>{{ cart.number }}</b></a>, foi realizado com sucesso.</p>
+        <p>Você pode comprar os produtos de seu orçamento a qualquer momento através do link abaixo:</p>
+        <p style='margin-top:40px;'><a style='{{ style.button }}' href="{{ url('flexy_ftwo_store_quote_buy', {'id': cart.id}) }}">Comprar produtos</a></p>
+        <br/>
+        <p>Seguem abaixo detalhes de seu orçamento.</p>
+    </div>
+    <div style="{{ style.inner }}">
+        <div style="{{ style.title }}">Dados do cliente</div>
+        <div>
+            <strong>Nome</strong>: {{ cart.customer.fullName }}<br />
+            <strong>E-mail</strong>: xxxxxxxx <br />
+            <strong>Telefone</strong>: xxxxxxxx <br />
+            <strong>Endereço</strong>: {{ cart.customer.defaultBillingAddress }}
+        </div>
+        {% if cart.observation %}
+        <div>
+            <strong>Observações</strong>:
+            <br/>
+            {{ cart.observation|nl2br }}
+        </div>
+        {% endif %}
+    </div>
+    <div style="{{ style.inner }}">
+        <div style="{{ style.title }}">Itens do orçamento</div>
+        <div style="text-align: right;">
+            {% for item in cart.items %}
+                <div style="background:#F5F5F5; padding:10px 20px; margin-bottom:2px; text-align: left; box-sizing:border-box;">
+                    <p>
+                        {{ item.variant }}
+                    </p>
+                    <div><span style="color:#428bca;">Qtde:</span>
+                        {% if item.variant.isFractionalStock %}
+                            {{ item.quantity|number_format(3, ',', '.') }}
+                        {% else %}
+                            {{ item.quantity }}
+                        {% endif %}
+                    </div>
+                    <div><span style="color:#428bca;">Valor:</span> R$ {{ item.totalWithDiscount }}</div>
+                </div>
+            {% endfor %}
+            <p>&nbsp;</p>
+            <table border="0" cellspacing="0" cellpadding="10" style="{{ style.font }}; width:60%;">
+                <tbody>
+                <tr bgcolor="#f5f5f5">
+                    <td width="50%" align="left">Subtotal</td>
+                    <td width="50%" align="right">R$  {{ cart.itemsTotalWithDiscount|number_format(2, ',', '.') }}</td>
+                </tr>
+                <tr bgcolor="#608DC9">
+                    <td width="50%" align="left" style="color:#FFF;">TOTAL</td>
+                    <td width="50%" align="right" style="color:#FFF;">R$ {{ cart.itemsTotalWithDiscount|number_format(2, ',', '.') }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="{{ style.inner }}">
+        <p>Cliente, para visualizar sua solicitação, <a href="https://www.liigo.com.br/customer/login">clique aqui</a>.</p>
+        <p>Lojista, para visualizar os dados do cliente, <a href="https://www.liigo.com.br/flexyadmin/user/login">clique aqui</a>.</p>
+        <p>Qualquer dúvida ou necessidade estamos a disposição para atendê-lo através de nossa <a href="{{ url('flexy_ftwo_store_contact') }}" style="{{ style.link }}">Central de Atendimento</a>.</p>
+        {{ mailSignature|raw }}
+    </div>
+{% endblock %}

@@ -11,18 +11,19 @@ const Categories = class Categories {
       this.apiFlexy = new FlexyAPI()
       this.root = new CategoryTree("root", null, 0)
       this.divCategory = dom.window.document.createElement('div')
-      this.divCategory.setAttribute('id', 'categories')
-      this.divCategory.setAttribute('class', 'row ml-3 mr-3 h-100 mh-100 overflow-auto')
-      //setInterval(this.main, 30000)
       this.main()
   }
 
   getLayout() {
-    return this.divCategory.outerHTML
+    return this.divCategory.innerHTML
   }
 
   getStores(categorySelected) {
-    return this.root.findNode(categorySelected).stores
+    const node = this.root.findNode(categorySelected)
+    if (node) {
+      return node.stores
+    }
+    return null
   }
 
   putQuoteProduct(enabledForEmptyPriceList) {
@@ -51,18 +52,37 @@ const Categories = class Categories {
     return div
   }
 
-  loadSubCategories(subCategories) {
+  loadCategories(newDivCategory, categoriesNode) {
+    let firstLevel = dom.window.document.createElement('div')
+    firstLevel.setAttribute('id', 'first-level')
+    firstLevel.setAttribute('class', 'col-3 px-0 overflow-auto list-group tab-pane fade show active')
+    firstLevel.setAttribute('role', 'tablist')
+    for (let category of categoriesNode.nodes) {
+      let a = dom.window.document.createElement('a')
+      a.setAttribute('class', 'list-group-item list-group-item-action')
+      a.setAttribute('id', 'root-' + category.referenceCode)
+      a.setAttribute('data-toggle', 'list')
+      a.setAttribute('href', '#' + category.referenceCode)
+      a.setAttribute('role', 'tab')
+      a.setAttribute('aria-controls', category.referenceCode)
+      a.textContent = category.name
+      firstLevel.appendChild(a)
+    }
+    newDivCategory.appendChild(firstLevel)
+  }
+
+  loadSubCategories(newDivCategory, subCategories) {
     let secondLevel = dom.window.document.createElement('div')
     secondLevel.setAttribute('id', 'second-level')
-    secondLevel.setAttribute('class', 'col-3 pl-0 pr-0 h-100 mh-100 overflow-auto')
+    secondLevel.setAttribute('class', 'col-3 px-0 overflow-auto ')
 
     let thirdLevel = dom.window.document.createElement('div')
     thirdLevel.setAttribute('id', 'third-level')
-    thirdLevel.setAttribute('class', 'col-3 pl-0 pr-0 h-100 mh-100 overflow-auto')
+    thirdLevel.setAttribute('class', 'col-3 px-0 overflow-auto ')
 
     let fourthLevel = dom.window.document.createElement('div')
     fourthLevel.setAttribute('id', 'fourth-level')
-    fourthLevel.setAttribute('class', 'col-3 pl-0 pr-0 h-100 mh-100 overflow-auto')
+    fourthLevel.setAttribute('class', 'col-3 px-0 overflow-auto ')
 
     for (let secondCategoryLevel of subCategories) {
       let secondDivLevel = this.loadList(secondCategoryLevel)
@@ -77,16 +97,9 @@ const Categories = class Categories {
       }
     }
 
-    this.divCategory.appendChild(secondLevel)
-    this.divCategory.appendChild(thirdLevel)
-    this.divCategory.appendChild(fourthLevel)
-  }
-
-  main = async () => {
-    while (true) {
-      await this.load()
-      await this.apiFlexy.sleep(600000)
-    }
+    newDivCategory.appendChild(secondLevel)
+    newDivCategory.appendChild(thirdLevel)
+    newDivCategory.appendChild(fourthLevel)
   }
 
   load = async() => {
@@ -97,30 +110,11 @@ const Categories = class Categories {
       const total = this.root.printTree('')
       console.log(total)
 
-      let firstLevel = dom.window.document.createElement('div')
-      firstLevel.setAttribute('id', 'first-level')
-      firstLevel.setAttribute('class', 'col-3 pl-0 pr-0 h-100 mh-100 overflow-auto list-group tab-pane fade show active')
-      firstLevel.setAttribute('role', 'tablist')
       const categoriesNode = this.root.findNodeByName("Categorias")
-      for (let category of categoriesNode.nodes) {
-        let a = dom.window.document.createElement('a')
-        a.setAttribute('class', 'list-group-item list-group-item-action')
-        a.setAttribute('id', 'root-' + category.referenceCode)
-        a.setAttribute('data-toggle', 'list')
-        a.setAttribute('href', '#' + category.referenceCode)
-        a.setAttribute('role', 'tab')
-        a.setAttribute('aria-controls', category.referenceCode)
-        a.textContent = category.name
-        firstLevel.appendChild(a)
-      }
-
-      this.divCategory = dom.window.document.createElement('div')
-      this.divCategory.setAttribute('id', 'categories')
-      this.divCategory.setAttribute('class', 'row ml-3 mr-3 h-100 mh-100 overflow-auto')
-      
-      this.divCategory.appendChild(firstLevel)
-
-      this.loadSubCategories(categoriesNode.nodes)
+      let newDivCategory = dom.window.document.createElement('div')
+      this.loadCategories(newDivCategory, categoriesNode)
+      this.loadSubCategories(newDivCategory, categoriesNode.nodes)
+      this.divCategory = newDivCategory
 
       const stores = await this.apiFlexy.getStores()
 
@@ -141,7 +135,6 @@ const Categories = class Categories {
       console.log(ableStores)
 
       const products = await this.apiFlexy.getProducts()
-      // console.log(products)
 
       for (let p of products) {
         if (Array.isArray(p.categories)) {
@@ -158,6 +151,13 @@ const Categories = class Categories {
         }
       }
       this.root.printTree('')
+  }
+
+  main = async () => {
+    while (true) {
+      await this.load()
+      await this.apiFlexy.sleep(600000)
+    }
   }
 
 }
