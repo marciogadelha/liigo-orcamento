@@ -33,3 +33,19 @@ html {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
+
+.hideDesktop {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+
+  .hideMobile {
+    display: none;
+  }
+
+  .hideDesktop {
+    display: flex;
+  }
+  
+}

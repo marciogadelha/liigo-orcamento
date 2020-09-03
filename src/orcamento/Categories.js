@@ -12,7 +12,7 @@ const Categories = class Categories {
       this.root = new CategoryTree("root", null, 0)
       this.divCategory = dom.window.document.createElement('div')
       this.divCategory.setAttribute('id', 'categories')
-      this.divCategory.setAttribute('class', 'd-flex overflow-auto')
+      this.divCategory.setAttribute('class', 'row mx-0 overflow-hidden')
       this.main()
   }
 
@@ -57,15 +57,15 @@ const Categories = class Categories {
   loadSubCategories(newDivCategory, subCategories) {
     let secondLevel = dom.window.document.createElement('div')
     secondLevel.setAttribute('id', 'second-level')
-    secondLevel.setAttribute('class', 'col-3 px-0 overflow-auto ')
+    secondLevel.setAttribute('class', 'h-100 col-md-3 px-0 overflow-auto ')
 
     let thirdLevel = dom.window.document.createElement('div')
     thirdLevel.setAttribute('id', 'third-level')
-    thirdLevel.setAttribute('class', 'col-3 px-0 overflow-auto ')
+    thirdLevel.setAttribute('class', 'h-100 col-md-3 px-0 overflow-auto ')
 
     let fourthLevel = dom.window.document.createElement('div')
     fourthLevel.setAttribute('id', 'fourth-level')
-    fourthLevel.setAttribute('class', 'col-3 px-0 overflow-auto ')
+    fourthLevel.setAttribute('class', 'h-100 col-md-3 px-0 overflow-auto ')
 
     for (let secondCategoryLevel of subCategories) {
       let secondDivLevel = this.loadList(secondCategoryLevel)
@@ -88,7 +88,7 @@ const Categories = class Categories {
   loadCategories(newDivCategory, categoriesNode) {
     let firstLevel = dom.window.document.createElement('div')
     firstLevel.setAttribute('id', 'first-level')
-    firstLevel.setAttribute('class', 'col-3 px-0 overflow-auto list-group tab-pane fade show active')
+    firstLevel.setAttribute('class', 'h-100 col-md-3 px-0 overflow-auto list-group tab-pane fade show active')
     firstLevel.setAttribute('role', 'tablist')
     for (let category of categoriesNode.nodes) {
       let a = dom.window.document.createElement('a')

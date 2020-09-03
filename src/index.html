@@ -14,13 +14,14 @@
     <!-- <button id="selectCategoryButton" class="btn btn-primary m-3">Selecione uma categoria</button> -->
     <div id="outerContainer" class="border rounded my-3 p-3">
         <div id="innerContainer" class="m-auto">
-            <h5 class="p-1">Selecione a categoria</h5>
+            <h5 id="categoryTitle" class="p-1">Selecione a categoria</h5>
+            <h5 id="categorySelected" class="p-1 mb-1 justify-content-center btn btn-primary hideDesktop collapse"></h5>
             <div id="categoryContainer" class="border rounded mb-3 p-1">
-                <div id="categories" class="d-flex overflow-auto"></div>
+                <div id="categories" class="row mx-0 overflow-hidden"></div>
             </div>
             <div id="buttonsContainer" class="d-flex justify-content-end">
-                <button id="okButton" class="btn btn-primary col-2">OK</button>
-                <button id="cancelButton" class="btn btn-primary ml-3 col-2">Cancelar</button>
+                <button id="okButton" class="btn btn-primary col-md-2">OK</button>
+                <button id="cancelButton" class="btn btn-primary ml-3 col-md-2">Cancelar</button>
             </div>
         </div>
     </div>
@@ -37,6 +38,44 @@
             //$.get("http://localhost:3000/categories", function(result) {
             $.get("https://liigo-orcamento.herokuapp.com/categories", function(result) {                
                 $("#categoryContainer").html(result);
+
+                $('#first-level').on('show.bs.tab', 'a', function() {
+                    $('#categoryTitle').addClass('hideMobile')
+                    $('#categorySelected').text($(this).text()).removeClass('collapse')
+                    if ($('#'+$(this).attr('aria-controls')).text()) {
+                        $('#first-level').addClass('hideMobile')
+                        $('#second-level').removeClass('hideMobile')
+                        $('#third-level').addClass('hideMobile')
+                        $('#fourth-level').addClass('hideMobile')
+                    }
+                })
+
+                $('#second-level').on('show.bs.tab', 'a', function() {
+                    $('#categoryTitle').addClass('hideMobile')
+                    $('#categorySelected').text($(this).text()).removeClass('collapse')
+                    if ($('#'+$(this).attr('aria-controls')).text()) {
+                        $('#first-level').addClass('hideMobile')
+                        $('#second-level').addClass('hideMobile')
+                        $('#third-level').removeClass('hideMobile')
+                        $('#fourth-level').addClass('hideMobile')
+                    }
+                })
+
+                $('#third-level').on('show.bs.tab', 'a', function() {
+                    $('#categoryTitle').addClass('hideMobile')
+                    $('#categorySelected').text($(this).text()).removeClass('collapse')
+                    if ($('#'+$(this).attr('aria-controls')).text()) {
+                        $('#first-level').addClass('hideMobile')
+                        $('#second-level').addClass('hideMobile')
+                        $('#third-level').addClass('hideMobile')
+                        $('#fourth-level').removeClass('hideMobile')
+                    }
+                })
+
+                $('#fourth-level').on('show.bs.tab', 'a', function() {
+                    $('#categoryTitle').addClass('hideMobile')
+                    $('#categorySelected').text($(this).text()).removeClass('collapse')
+                })
 
                 $('#first-level').on('hide.bs.tab', 'a', function() {
                     $('#fourth-level>div').removeClass('active show')
@@ -59,6 +98,21 @@
                 $('#cancelButton').click(function() {
                     // $('#selectCategoryButton').removeClass('collapse')
                     // $('#outerContainer').addClass('collapse')
+                    $('#categorySelected').addClass('collapse')
+                    $('#categoryTitle').removeClass('hideMobile')
+                    $('#first-level>a').removeClass('active show')
+                    $('#first-level>div').removeClass('active show')
+                    $('#first-level>div>a').removeClass('active show')
+                    $('#second-level>div').removeClass('active show')
+                    $('#second-level>div>a').removeClass('active show')
+                    $('#third-level>div').removeClass('active show')
+                    $('#third-level>div>a').removeClass('active show')
+                    $('#fourth-level>div').removeClass('active show')
+                    $('#fourth-level>div>a').removeClass('active show')
+                    $('#first-level').removeClass('hideMobile')
+                    $('#second-level').addClass('hideMobile')
+                    $('#third-level').addClass('hideMobile')
+                    $('#fourth-level').addClass('hideMobile')
                     window.parent.postMessage({type:'iframeCollapse'}, '*')
                 })
                 $('#okButton').click(function() {
