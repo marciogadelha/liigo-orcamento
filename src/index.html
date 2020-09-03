@@ -12,9 +12,9 @@
 
 <body>
     <button id="selectCategoryButton" class="btn btn-primary m-3">Selecione uma categoria</button>
-    <div id="outerContainer" class="border rounded m-3 p-3 collapse">
+    <div id="outerContainer" class="border rounded my-3 p-3 collapse">
         <div id="innerContainer" class="m-auto">
-            <h4 class="p-1">Selecione a categoria</h4>
+            <h5 class="p-1">Selecione a categoria</h5>
             <div id="categoryContainer" class="border rounded mb-3 p-1">
                 <div id="categories" class="d-flex h-100 mh-100 overflow-auto"></div>
             </div>
@@ -64,7 +64,7 @@
                     const referenceCategorySelected = $('a.active').last().attr('aria-controls')
                     const nameCategorySelected = $('a.active').last().text()
                     //$.get("http://localhost:3000/stores/" + referenceCategorySelected, function(result) {
-                    $.get("https://liigo-orcamento.herokuapp.com/stores/" + categorySelected, function(result) {
+                    $.get("https://liigo-orcamento.herokuapp.com/stores/" + referenceCategorySelected, function(result) {
                         window.parent.postMessage(result, '*')
                         if (nameCategorySelected) {
                             $('#selectCategoryButton').removeClass('collapse').text(nameCategorySelected)
