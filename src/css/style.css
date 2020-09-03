@@ -34,10 +34,6 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-#outerContainer {
-  width: 960px;
-}
-
 #categoryContainer {
   height: 416px;
 }
