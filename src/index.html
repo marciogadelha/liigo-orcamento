@@ -11,8 +11,8 @@
 </head>
 
 <body>
-    <button id="selectCategoryButton" class="btn btn-primary m-3">Selecione uma categoria</button>
-    <div id="outerContainer" class="border rounded my-3 p-3 collapse">
+    <!-- <button id="selectCategoryButton" class="btn btn-primary m-3">Selecione uma categoria</button> -->
+    <div id="outerContainer" class="border rounded my-3 p-3">
         <div id="innerContainer" class="m-auto">
             <h5 class="p-1">Selecione a categoria</h5>
             <div id="categoryContainer" class="border rounded mb-3 p-1">
@@ -57,28 +57,32 @@
                     $('#fourth-level>div>a').removeClass('active show')
                 })
                 $('#cancelButton').click(function() {
-                    $('#selectCategoryButton').removeClass('collapse')
-                    $('#outerContainer').addClass('collapse')
-                    window.parent.postMessage({type:'iframeHeight', data:'55px'}, '*')
+                    // $('#selectCategoryButton').removeClass('collapse')
+                    // $('#outerContainer').addClass('collapse')
+                    window.parent.postMessage({type:'iframeCollapse'}, '*')
                 })
                 $('#okButton').click(function() {
-                    const referenceCategorySelected = $('a.active').last().attr('aria-controls')
-                    const nameCategorySelected = $('a.active').last().text()
-                    //$.get("http://localhost:3000/stores/" + referenceCategorySelected, function(result) {
-                    $.get("https://liigo-orcamento.herokuapp.com/stores/" + referenceCategorySelected, function(result) {
-                        window.parent.postMessage({type:'shoppingStoreList' , data:result}, '*')
-                        if (nameCategorySelected) {
-                            $('#selectCategoryButton').removeClass('collapse').text(nameCategorySelected)
-                            $('#outerContainer').addClass('collapse')
-                            window.parent.postMessage({type:'iframeHeight', data:'55px'}, '*')
-                        }
-                    });
+                    const categoryReferenceSelected = $('a.active').last().attr('aria-controls')
+                    const categoryNameSelected = $('a.active').last().text()
+                    if (categoryNameSelected) {
+                        // $('#selectCategoryButton').removeClass('collapse').text(nameCategorySelected)
+                        // $('#outerContainer').addClass('collapse')
+                        window.parent.postMessage({type:'categoryName' , data:categoryNameSelected}, '*')
+                        window.parent.postMessage({type:'iframeCollapse'}, '*')
+                        //$.get("http://localhost:3000/stores/" + categoryReferenceSelected, function(result) {
+                        $.get("https://liigo-orcamento.herokuapp.com/stores/" + categoryReferenceSelected, function(result) {
+                            // $('#selectCategoryButton').removeClass('collapse').text(nameCategorySelected)
+                            // $('#outerContainer').addClass('collapse')
+                            window.parent.postMessage({type:'shoppingStoreList' , data:result}, '*')
+                        })
+                    }
                 })
-                $('#selectCategoryButton').click(function () {
-                    window.parent.postMessage({type:'iframeHeight', data: parseInt($('#categories').height()) + 154 + 'px'}, '*')
-                    $(this).addClass('collapse')
-                    $('#outerContainer').removeClass('collapse')
-                })
+                window.parent.postMessage({type:'iframeHeight', data: parseInt($('#categories').height()) + 154 + 'px'}, '*')
+                // $('#selectCategoryButton').click(function () {
+                //     window.parent.postMessage({type:'iframeHeight', data: parseInt($('#categories').height()) + 154 + 'px'}, '*')
+                //     // $(this).addClass('collapse')
+                //     // $('#outerContainer').removeClass('collapse')
+                // })
             });
         });
     </script>

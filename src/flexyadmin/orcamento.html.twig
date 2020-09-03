@@ -26,7 +26,8 @@
                 <div class='wow fadeInLeft animated mx-1 mb-3'>
                     <h4 class='mx-1 mb-3'>Que tipo de produto ou serviço deseja cotar?</h4>
                     {# <a id="selectCategoryButton" onclick="showIframe()" href="javascript:void(0);" class="btn btn-light-blue">Selecione uma categoria</a> #}
-			        <iframe id="iframeCategory" width="100%" height="55px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no" seamless></iframe>
+                    <button id="selectCategoryButton" class="btn btn-light-blue m-3">Selecione uma categoria</button>
+			        <iframe id="iframeCategory" width="100%" height="560px" src="https://liigo-orcamento.herokuapp.com/" title="Orçamento" frameborder="0" scrolling="no" class="collapse" seamless></iframe>
                     <hr>
                     <h4 class='mx-1 mb-3'>Nome do produto ou serviço que procura:</h4>
                     <input id="quote-form-name-field" type="text" class="form-control ml-3 mr-4 pr-3 rounded" required></input>
@@ -97,22 +98,24 @@ crossorigin="anonymous"></script>
             e.preventDefault();
             $('#submitButton').removeAttr('disabled')
         });
+        $("#selectCategoryButton").click(function() {
+            $(this).hide()
+            $('#iframeCategory').removeClass('collapse')
+        })
         window.addEventListener('message', event => {
-            //console.log("Event data:")
             console.log(event.data);
-            if (event.data.type === 'shoppingStoreList') {
-                shoppingStoreList = event.data.data
+            if (event.data.type === 'iframeCollapse') {
+                $('#iframeCategory').addClass('collapse')
+                $("#selectCategoryButton").show()
             } else if (event.data.type === 'iframeHeight') {
                 $('#iframeCategory').height(event.data.data)
+            } else if (event.data.type === 'categoryName') {
+                $('#selectCategoryButton').text(event.data.data)
+            } else if (event.data.type === 'shoppingStoreList') {
+                shoppingStoreList = event.data.data
             }
         });
     })
-</script>
-<script>
-    function showIframe() {
-        $('#selectCategoryButton').hide();
-        $('#iframeCategory').removeClass("collapse")
-    }
 </script>
 <script>
     function quoteFormSubmit() {
