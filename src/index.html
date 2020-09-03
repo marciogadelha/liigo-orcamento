@@ -59,7 +59,7 @@
                 $('#cancelButton').click(function() {
                     $('#selectCategoryButton').removeClass('collapse')
                     $('#outerContainer').addClass('collapse')
-                    window.parent.outerHeight = "55px"
+                    $('#iframeCategory', window.parent.document).height('55px');
                 })
                 $('#okButton').click(function() {
                     const referenceCategorySelected = $('a.active').last().attr('aria-controls')
@@ -70,12 +70,12 @@
                         if (nameCategorySelected) {
                             $('#selectCategoryButton').removeClass('collapse').text(nameCategorySelected)
                             $('#outerContainer').addClass('collapse')
-                            window.parent.outerHeight = "55px"
+                            $('#iframeCategory', window.parent.document).height('55px');
                         }
                     });
                 })
                 $('#selectCategoryButton').click(function () {
-                    window.parent.outerHeight = "548px"
+                    $('#iframeCategory', window.parent.document).height('548px');
                     $(this).addClass('collapse')
                     $('#outerContainer').removeClass('collapse')
                 })
