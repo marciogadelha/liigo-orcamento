@@ -100,7 +100,11 @@ crossorigin="anonymous"></script>
         window.addEventListener('message', event => {
             //console.log("Event data:")
             console.log(event.data);
-            shoppingStoreList = event.data
+            if (event.data.type === 'shoppingStoreList') {
+                shoppingStoreList = event.data.data
+            } else if (event.data.type === 'iframeHeight') {
+                $('#iframeCategory').height(event.data.data)
+            }
         });
     })
 </script>
