@@ -158,8 +158,8 @@ const Categories = class Categories {
 
   main = async () => {
     while (true) {
-      await this.apiFlexy.sleep(86400000)
       await this.load()
+      await this.apiFlexy.sleep(86400000)
     }
   }
 
