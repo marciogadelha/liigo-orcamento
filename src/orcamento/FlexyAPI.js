@@ -6,7 +6,7 @@ const FlexyAPI = class FlexyAPI {
     this.api = axios.create({
       baseURL: 'https://liigo.api.flexy.com.br/platform/api/',
     })
-    this.token = "ud6qqbo04cn3pujrebunba"
+    this.token = "cyzrdxvblrqhhutomwzr"
   }
 
   async getUntilSuccess(info, config) {
