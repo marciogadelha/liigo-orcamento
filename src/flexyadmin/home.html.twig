@@ -1,0 +1,137 @@
+{% extends "FlexyFtwoStoreBundle:Layout:base.html.twig" %}
+
+{% set images = flexy_ftwo_banner_image_list('home-banner').images %}
+{% block content %}
+	{% include 'FlexyFtwoStoreBundle:Include/Common:main-banner.html.twig' with {images: images} %}
+	{% set images = flexy_ftwo_banner_image_list('home-mob').images %}
+	{% include 'FlexyFtwoStoreBundle:Include/Common:main-banner-mob.html.twig' with {images: images} %}
+
+
+    <section class="conteudoo{{ images|length == 0 ? "first-page-container" : "" }}">
+        <div class="container">
+                <div class="blocos">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <img src="https://i.imgur.com/0Y77FM5.png" class="img-responsive" />
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <img src="https://i.imgur.com/PgojGAT.png" class="img-responsive" />
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <img src="https://i.imgur.com/uY9RkWl.png" class="img-responsive" />
+                        </div>
+
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <img src="https://i.imgur.com/OwpjuhE.png" class="img-responsive" />
+                        </div>
+                    </div>
+
+                <div class="">
+                    <div class="block-products-modes titulo-lista">
+
+                        <a>Mais Vendidos</a>
+                        <a href="#" class="filter-menu-btn hidden-lg hidden-md">Filtrar</a>
+                    </div>
+
+                    <div class="row">
+                        {% include 'FlexyFtwoStoreBundle:Include:variant-list-block.html.twig' with {variants: f2_store_variant_list(null,{'order' : 'sales-asc'}).variants} %}
+                    </div>
+                </div>
+
+                {% set gallery = flexy_ftwo_banner_image_list('banners-categorias') %}
+                <div class="categorias">
+                    <div class="container container-inove">
+                        {% if gallery.images|length > 0 %}
+                            {% for image in gallery.images %}
+                                <div class="col-md-4 col-xs-6">
+                                    <span class="categoria">
+                                        <a href="{{ image.target }}"><img src="{{ image.path }}" class="img-responsive"></a>
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="block-products-modes titulo-lista">
+
+                        <a>Ofertas</a>
+                        <a href="#" class="filter-menu-btn hidden-lg hidden-md">Filtrar</a>
+                    </div>
+
+                        <div class="container">
+                             {% include 'FlexyFtwoStoreBundle:Include:variant-list-block1.html.twig' with {variants: f2_store_variant_list('ofertas',{'order' : 'price-asc'}).variants} %}
+                        </div>
+                </div>
+
+
+                {% set gallery = flexy_ftwo_banner_image_list('mini-banners1') %}
+                <div class="banners-meio">
+                    <div class="container container-inove">
+                        {% if gallery.images|length > 0 %}
+                            {% for image in gallery.images %}
+                        <div class="col-md-6 col-xs-6">
+                            <div class="banner-meio">
+                                <a href="{{ image.target }}"><img src="{{ image.path }}" class="img-responsive"></a>
+                            </div>
+                        </div>
+                           {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="block-products-modes titulo-lista">
+
+                        <a>Destaques</a>
+                        <a href="#" class="filter-menu-btn hidden-lg hidden-md">Filtrar</a>
+                    </div>
+
+
+                        <div class="container">
+                           {% include 'FlexyFtwoStoreBundle:Include:variant-list-block2.html.twig' with {variants: f2_store_variant_list('destaques',{'order' : 'createdAt-desc'}).variants} %}
+                        </div>
+                </div>
+
+                {% set gallery = flexy_ftwo_banner_image_list('mini-banners2') %}
+                <div class="banners-meio">
+                    <div class="container container-inove">
+                        {% if gallery.images|length > 0 %}
+                            {% for image in gallery.images %}
+                        <div class="col-md-6 col-xs-6">
+                            <div class="banner-meio esquerda">
+                                <a href="{{ image.target }}"><img src="{{ image.path }}" class="img-responsive"></a>
+                            </div>
+                        </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="block-products-modes titulo-lista">
+
+                        <a>Lançamentos</a>
+                        <a href="#" class="filter-menu-btn hidden-lg hidden-md">Filtrar</a>
+                    </div>
+
+                        <div class="container">
+                              {% include 'FlexyFtwoStoreBundle:Include:variant-list-block3.html.twig' with {variants: f2_store_variant_list(null,{'order' : 'createdAt-desc'}).variants} %}
+                        </div>
+                </div>
+            </div>
+        </div>
+        <span class="whatsappbusiness">
+            <a href="https://wa.me/5511966458116?text=Ol%C3%A1,%20bem%20vindo%20a%20Liigo!%20Como%20podemos%20te%20ajudar?" target="_blank"><img src="https://i.imgur.com/mx7RuPb.png" class="img-responsive" /></a>
+        </span>
+    </section>
+{% endblock %}
+
+
+
+{% block javascript %}
+    {%  include 'FlexyFtwoStoreBundle:Javascript:_sidebar.html.twig' %}
+{% endblock %}

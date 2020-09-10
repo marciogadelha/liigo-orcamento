@@ -1,0 +1,28 @@
+                
+                {% set gallery = flexy_ftwo_banner_image_list('banners-orcamento') %}
+                <div class="banners-meio">
+                    <div class="container container-inove">
+                        {% if gallery.images|length > 0 %}
+                        	{% set secondBanner = false %}
+                            {% for image in gallery.images %}
+                                <div class="col-md-6 col-xs-6">
+                                {% if secondBanner == false %}
+                                	<div class="banner-meio">
+                                {% else %}
+                                    <div class="banner-meio" style="border: lightgray 3px solid">
+                                {% endif %}
+                                        <a href="{{ image.target }}"><img src="{{ image.path }}" class="img-responsive"></a>
+                                    </div>
+                                </div>
+                                {% set secondBanner = true %}
+                           {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+
+                <!-- <div id="banner2-orcamento" class="banner-meio">
+                    <a href="https://www.liigo.com.br/orcamento"></a>
+                        <img src="C:\Users\mraga\Desktop\banner2-orcamento.png" class="img-responsive">
+                    </a>
+                </div> -->

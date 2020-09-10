@@ -8,7 +8,7 @@ const api = express();
 api.use(cors())
 
 const corsOptions = {
-    origin: '*',
+    origin: 'https://www.liigo.com.br/',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
