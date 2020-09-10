@@ -36,7 +36,8 @@
     <script>
         $(document).ready(function() {
             //$.get("http://localhost:3000/categories", function(result) {
-            $.get("https://liigo-orcamento.herokuapp.com/categories", function(result) {                
+            //$.get("https://liigo-orcamento.herokuapp.com/categories", function(result) {
+            $.get("/categories", function(result) {                
                 $("#categoryContainer").html(result);
 
                 $('#first-level').on('show.bs.tab', 'a', function() {
@@ -124,7 +125,8 @@
                         window.parent.postMessage({type:'categoryName' , data:categoryNameSelected}, '*')
                         window.parent.postMessage({type:'iframeCollapse'}, '*')
                         //$.get("http://localhost:3000/stores/" + categoryReferenceSelected, function(result) {
-                        $.get("https://liigo-orcamento.herokuapp.com/stores/" + categoryReferenceSelected, function(result) {
+                        //$.get("https://liigo-orcamento.herokuapp.com/stores/" + categoryReferenceSelected, function(result) {
+                        $.get("/stores/" + categoryReferenceSelected, function(result) {
                             // $('#selectCategoryButton').removeClass('collapse').text(nameCategorySelected)
                             // $('#outerContainer').addClass('collapse')
                             window.parent.postMessage({type:'shoppingStoreList' , data:result}, '*')

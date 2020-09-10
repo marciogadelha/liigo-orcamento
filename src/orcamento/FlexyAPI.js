@@ -53,7 +53,7 @@ const FlexyAPI = class FlexyAPI {
   }
 
   async getProducts() {
-    const responseData = await this.getData('products', 50)
+    const responseData = await this.getData('products', 100)
     return responseData
   }
 
