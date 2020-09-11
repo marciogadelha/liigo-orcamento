@@ -84,50 +84,40 @@
 crossorigin="anonymous"></script>
 <script>
     async function quoteAddFinish(shoppingStore, itemName, itemDescription, service) {
-        let quoteEnabled = false
         await $.ajax({
             url: 'https://liigo-orcamento.herokuapp.com/quote/true',
             type: 'PUT',
             success: function() {
                 console.log("Product quote enabled!")
-                quoteEnabled = true
             },
             error: function(e) {
-                console.log("Product quote not enabled!")
-                console.log("Error!")
+                console.log("Error: Product quote not enabled!")
                 console.log(e)
             }
         })
-        if (quoteEnabled) {
-            let quoteAdded = false
-            await $.ajax({
-                url: "/quote/add",
-                type: "post",
-                dataType: "json",
-                data: {
-                    id: "1572",
-                    quantity: 1,
-                    additionalVariantId: [],
-                    distributionCenter: shoppingStore,
-                    attributeValues: (service !== "undefined") ? {"Servico": service} : {}
-                },
-                success: function() {
-                    console.log("Quote added!")
-                    quoteAdded = true
-                },
-                error: function(e) {
-                    console.log("Quote not added!")
-                    console.log("Error!")
-                    console.log(e)
-                }
-            })
-            if (quoteAdded) {
-                $('#chart-quote-container').load(document.URL + ' #chart-quote', function() {
-                    $("textarea").text("Item: " + itemName + "\nDescrição:\n" + itemDescription)
-                    $("#submitButton").click()
-                })
+        await $.ajax({
+            url: "/quote/add",
+            type: "post",
+            dataType: "json",
+            data: {
+                id: "1572",
+                quantity: 1,
+                additionalVariantId: [],
+                distributionCenter: shoppingStore,
+                attributeValues: (service !== "undefined") ? {"Servico": service} : {}
+            },
+            success: function() {
+                console.log("Quote added!")
+            },
+            error: function(e) {
+                console.log("Error: Quote not added!")
+                console.log(e)
             }
-        }
+        })
+        $('#chart-quote-container').load(document.URL + ' #chart-quote', function() {
+            $("textarea").text("Item: " + itemName + "\nDescrição:\n" + itemDescription)
+            $("#submitButton").click()
+        })
     }
 
     $(document).ready(function() {
@@ -147,8 +137,7 @@ crossorigin="anonymous"></script>
                         console.log("Product quote disabled!")
                     },
                     error: function(e) {
-                        console.log("Product quote not disabled!")
-                        console.log("Error!")
+                        console.log("Error: Product quote not disabled!")
                         console.log(e)
                     }
                 })
@@ -156,7 +145,6 @@ crossorigin="anonymous"></script>
                 sessionStorage.removeItem("quote-form-description-field");
                 sessionStorage.removeItem("shopping-store-list");
                 sessionStorage.removeItem("service-atrribute-value");
-                sessionStorage.removeItem("index-shopping-store-list");
                 $("#aviso-localizando-lojas").text("Pronto! Sua solicitação foi realizada.")
             }
         })

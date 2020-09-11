@@ -102,7 +102,6 @@ crossorigin="anonymous"></script>
             $('#iframeCategory').removeClass('collapse')
         })
         window.addEventListener('message', event => {
-            console.log(event.data);
             if (event.data.type === 'iframeCollapse') {
                 $('#iframeCategory').addClass('collapse')
                 $("#selectCategoryButton").show()
@@ -118,7 +117,6 @@ crossorigin="anonymous"></script>
 </script>
 <script>
     function quoteFormSubmit() {
-        console.log(shoppingStoreList)
         if (Array.isArray(shoppingStoreList) && shoppingStoreList.length > 0) {
             if (typeof(Storage) !== "undefined") {
                 let n = {}
@@ -130,8 +128,6 @@ crossorigin="anonymous"></script>
                 sessionStorage.setItem("quote-form-description-field", $("#quote-form-description-field").val());
                 sessionStorage.setItem("shopping-store-list", JSON.stringify(shoppingStoreList));
                 sessionStorage.setItem("service-atrribute-value", n["Servico"]);
-                sessionStorage.setItem("index-shopping-store-list", 0);
-                sessionStorage.setItem("quote-finish", 0);
                 {% if flexy_ftwo_current_user_exists() %}
                     window.location = '/orcamentos'
                 {% else %}
