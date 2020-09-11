@@ -17,7 +17,7 @@
             <h5 id="categoryTitle" class="p-1">Selecione a categoria</h5>
             <h5 id="categorySelected" class="p-1 mb-1 justify-content-center btn btn-primary hideDesktop collapse"></h5>
             <div id="categoryContainer" class="border rounded mb-3 p-1">
-                <div id="categories" class="row mx-0 overflow-hidden"></div>
+                <div id="categories" class="row mx-0 overflow-hidden" style="height: 406px;"></div>
             </div>
             <div id="buttonsContainer" class="d-flex justify-content-end">
                 <button id="okButton" class="btn btn-primary col-md-2">OK</button>
@@ -129,10 +129,7 @@
                         })
                     }
                 })
-                let newHeight = parseInt($('#categories').height())
-                while(newHeight === 0) {
-                    newHeight = parseInt($('#categories').height())
-                }
+                const newHeight = parseInt($('#categories').height())
                 window.parent.postMessage({type:'iframeHeight', data: newHeight + 154 + 'px'}, '*')
                 // $('#selectCategoryButton').click(function () {
                 //     window.parent.postMessage({type:'iframeHeight', data: parseInt($('#categories').height()) + 154 + 'px'}, '*')
