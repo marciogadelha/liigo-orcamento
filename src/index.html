@@ -35,7 +35,7 @@
       crossorigin="anonymous"></script>
     <script>
         $(document).ready(function() {
-            $.get("/categories", function(result) {                
+            $.get("/categories", function(result) {
                 $("#categoryContainer").html(result);
 
                 $('#first-level').on('show.bs.tab', 'a', function() {
@@ -129,7 +129,10 @@
                         })
                     }
                 })
-                window.parent.postMessage({type:'iframeHeight', data: parseInt($('#categories').height()) + 154 + 'px'}, '*')
+
+                $("#categoryContainer").ready(function() {
+                    window.parent.postMessage({type:'iframeHeight', data: parseInt($('#categories').height()) + 154 + 'px'}, '*')
+                })
                 // $('#selectCategoryButton').click(function () {
                 //     window.parent.postMessage({type:'iframeHeight', data: parseInt($('#categories').height()) + 154 + 'px'}, '*')
                 //     // $(this).addClass('collapse')

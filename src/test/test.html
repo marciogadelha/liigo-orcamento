@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body id="mybody">
+    <iframe id="iframeCategory" width="100%" height="560px" src="http://localhost:3000/" title="Orçamento" frameborder="0" scrolling="no" class="" seamless></iframe>
     <div class="banners-meio">
         <div class="container container-inove">
         <div class="col-md-6">
@@ -37,39 +38,30 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script>
-        function resizeInput() {
-            console.log("On")
-            let dynamicSizeInput = $("#dynamicSizeInput")
-            const fakeElement = $("#fakeElement")
-            fakeElement.text(dynamicSizeInput.attr('placeholder')).css('font', dynamicSizeInput.css('font'));
-            const inputWidth = fakeElement.width() + 18;
-            console.log(inputWidth)
-            $("#dynamicSizeInput").css({
-                width: inputWidth
+        var shoppingStoreList = []
+        $(document).ready(function() {
+            $("#quoteForm").submit(function(e){
+                e.preventDefault();
+                $('#submitButton').removeAttr('disabled')
+            });
+            $("#selectCategoryButton").click(function() {
+                $(this).hide()
+                $('#iframeCategory').removeClass('collapse')
             })
-        }
-        window.addEventListener("resize", resizeInput);
-
-        $(document).ready(function () {
-            resizeInput()
-            // $("img").each(function () {
-            //     console.log($(this).attr("src"))
-            //     let srcImage = $(this).attr("src")
-            //     let base64 = srcImage.split('base64,')[1];
-            //     let hex = [...atob(base64)].map(c => c.charCodeAt(0).toString(16).padStart(2, 0));
-            //     let img = 'data:image/png,%' + hex.join('%');
-            //     $(this).attr("src", img)
-            // })
-            // const banner1 = $("#banner1-orcamento")
-            // let banner2 = $("#banner2-orcamento")
-            // banner2.style.height = banner1.style.height
-            // banner2.style.width = banner1.style.width
-
-
+            window.addEventListener('message', event => {
+                console.log(event.data.data)
+                if (event.data.type === 'iframeCollapse') {
+                    $('#iframeCategory').addClass('collapse')
+                    $("#selectCategoryButton").show()
+                } else if (event.data.type === 'iframeHeight') {
+                    $('#iframeCategory').height(event.data.data)
+                } else if (event.data.type === 'categoryName') {
+                    $('#selectCategoryButton').text(event.data.data)
+                } else if (event.data.type === 'shoppingStoreList') {
+                    shoppingStoreList = event.data.data
+                }
+            });
         })
     </script>
-<script>
-
-</script>
 </body>
 </html>
