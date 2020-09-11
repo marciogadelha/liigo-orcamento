@@ -130,7 +130,9 @@
                     }
                 })
                 const newHeight = parseInt($('#categories').height())
-                window.parent.postMessage({type:'iframeHeight', data: newHeight + 154 + 'px'}, '*')
+                if (newHeight !== 0) {
+                    window.parent.postMessage({type:'iframeHeight', data: newHeight + 154 + 'px'}, '*')
+                }
                 // $('#selectCategoryButton').click(function () {
                 //     window.parent.postMessage({type:'iframeHeight', data: parseInt($('#categories').height()) + 154 + 'px'}, '*')
                 //     // $(this).addClass('collapse')
