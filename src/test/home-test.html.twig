@@ -161,12 +161,10 @@
 {% block javascript %}
     <script>
         function resizeInput() {
-            console.log("On")
             let dynamicSizeInput = $("#dynamicSizeInput")
             const fakeElement = $("#fakeElement")
             fakeElement.text(dynamicSizeInput.attr('placeholder')).css('font', dynamicSizeInput.css('font'));
             const inputWidth = fakeElement.width() + 18;
-            console.log(inputWidth)
             $("#dynamicSizeInput").css({
                 width: inputWidth
             })
