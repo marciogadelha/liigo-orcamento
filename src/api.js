@@ -8,7 +8,7 @@ const api = express();
 api.use(cors())
 
 const internalCorsOptions = {
-    origin: 'https://liigo-orcamento.herokuapp.com/',
+    origin: 'localhost',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
