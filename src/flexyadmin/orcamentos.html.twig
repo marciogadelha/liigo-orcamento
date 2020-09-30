@@ -85,7 +85,7 @@ crossorigin="anonymous"></script>
 <script>
     async function quoteAddFinish(shoppingStore, itemName, itemDescription, service) {
         await $.ajax({
-            url: 'https://liigo-orcamento.herokuapp.com/quote/true',
+            url: 'https://orcamento.liigo.com.br/quote/true',
             type: 'PUT',
             success: function() {
                 console.log("Product quote enabled!")
@@ -131,7 +131,7 @@ crossorigin="anonymous"></script>
                 quoteAddFinish(shoppingStoreList[shoppingStoreIndex++], itemName, itemDescription, service)
             } else {
                 $.ajax({
-                    url: 'https://liigo-orcamento.herokuapp.com/quote/false',
+                    url: 'https://orcamento.liigo.com.br/quote/false',
                     type: 'PUT',
                     success: function() {
                         console.log("Product quote disabled!")
